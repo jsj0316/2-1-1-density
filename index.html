@@ -271,8 +271,8 @@
             const [message, setMessage] = useState("");
             const [isMixing, setIsMixing] = useState(false);
 
-            // Filter for only Water, Oil, Alcohol
-            const availableLiquids = LIQUIDS.filter(l => ['water', 'oil', 'alcohol'].includes(l.id));
+            // Changed: honey, water, oil — all immiscible with each other
+            const availableLiquids = LIQUIDS.filter(l => ['honey', 'water', 'oil'].includes(l.id));
 
             const addToTower = (l) => { 
                 if (layers.length >= 5 || isMixing) return;
@@ -336,7 +336,7 @@
                         <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2 mb-2">
                             <Droplets className="text-purple-600" /> 물질이 뜨거나 가라앉는 것과 밀도의 관계 알아보기
                         </h2>
-                        <p className="text-gray-600">액체를 넣어보고 어떤 것이 뜨고 가라앉는지 관찰해보세요.</p>
+                        <p className="text-gray-600">서로 섞이지 않는 액체를 넣어보고 밀도에 따라 층이 분리되는 것을 관찰해보세요.</p>
                     </div>
                     <div className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-8">
                         <div className="flex flex-col items-center">
@@ -349,7 +349,7 @@
                                                 backgroundColor: l.color, 
                                                 color: l.textColor, 
                                                 opacity: 0.9,
-                                                transform: isMixing ? `translateY(${Math.sin(idx)*5}px)` : 'none' // Simple visual disturbance
+                                                transform: isMixing ? `translateY(${Math.sin(idx)*5}px)` : 'none'
                                             }}>
                                             <span className="text-xs font-bold drop-shadow-md">{l.name}</span>
                                         </div>
@@ -362,12 +362,13 @@
                         <div className="flex-1 flex flex-col gap-6 w-full">
                             <div className="bg-white p-4 rounded-xl shadow-md">
                                 <h3 className="font-bold text-gray-700 mb-2">1단계: 액체 관찰하기 (클릭하여 컵에 넣기)</h3>
+                                <p className="text-xs text-gray-500 mb-3">꿀, 물, 식용유는 서로 섞이지 않는 액체입니다. 밀도 차이에 의해 층이 분리됩니다.</p>
                                 <div className="flex flex-wrap gap-2">
                                     {availableLiquids.map(l => (
                                         <button key={l.id} onClick={() => addToTower(l)} disabled={isMixing}
                                             className="px-3 py-2 rounded-lg border hover:bg-gray-50 text-sm disabled:opacity-50" 
                                             style={{ borderLeft: `4px solid ${l.color}` }}>
-                                            {l.name}
+                                            {l.name} ({l.density} g/mL)
                                         </button>
                                     ))}
                                     <button onClick={resetAll} className="ml-auto text-xs text-red-500 underline">비우기</button>
@@ -383,7 +384,7 @@
                                                     <>
                                                         <div className="w-full h-full absolute inset-0 rounded-lg opacity-20" style={{backgroundColor: slot.color}}></div>
                                                         <span className="font-bold text-gray-800 z-10 text-xs text-center">{slot.name}</span>
-                                                        {isSuccess && <div className="absolute bottom-1 bg-white px-1 rounded text-[10px] font-bold text-blue-600 shadow-sm z-10">{slot.density}</div>}
+                                                        {isSuccess && <div className="absolute bottom-1 bg-white px-1 rounded text-[10px] font-bold text-blue-600 shadow-sm z-10">{slot.density} g/mL</div>}
                                                     </>
                                                 ) : <span className="text-gray-300 text-2xl font-bold">{idx + 1}</span>}
                                             </div>
@@ -497,7 +498,7 @@
                         </div>
                     </header>
                     <main className="flex-1 bg-gray-50 overflow-y-auto" style={{minHeight: '600px'}}>{activeTab === 'experiment' && <ExperimentLab />}{activeTab === 'tower' && <DensityTower />}{activeTab === 'diver' && <DiverGame />}</main>
-                    <footer className="bg-white border-t p-4 text-center text-gray-500 text-xs font-medium italic">제작자 : 과학체육관 & 송쌤과학 Last updated : 2026-02-10</footer>
+                    <footer className="bg-white border-t p-4 text-center text-gray-500 text-xs font-medium italic">제작자 : 과학이조선생 & 송쌤과학 Last updated : 2026-03-09</footer>
                 </div>
             );
         };
