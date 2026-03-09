@@ -8,846 +8,798 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; margin:0; }
-        .cylinder-gradient {
-            background: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.4) 100%);
-            border-left: 1px solid rgba(255,255,255,0.5);
-            border-right: 1px solid rgba(255,255,255,0.5);
-        }
-        .water-surface { transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .liquid-layer { transition: all 0.8s ease-in-out; }
-        .ocean-gradient {
-            background: linear-gradient(to bottom, #bae6fd 0%, #7dd3fc 10%, #38bdf8 20%, #0284c7 50%, #075985 75%, #0c4a6e 100%);
-        }
-        .diver-anim { transition: top 2s cubic-bezier(0.45, 0.05, 0.55, 0.95); }
-
-        .ship-float { animation: ship-move 4s ease-in-out infinite; }
-        @keyframes ship-move {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-4px) rotate(1.5deg); }
-        }
-
-        @keyframes bubble-rise {
-            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.7; }
-            50% { transform: translateY(-80px) translateX(-8px) scale(1.2); opacity: 0.5; }
-            100% { transform: translateY(-160px) translateX(4px) scale(0.6); opacity: 0; }
-        }
-        .bubble { animation: bubble-rise var(--dur, 3s) var(--delay, 0s) infinite ease-out; }
-
-        @keyframes wave-move {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .wave-anim { animation: wave-move 6s linear infinite; }
-
-        @keyframes fish-swim {
-            0% { transform: translateX(-40px) scaleX(1); }
-            49% { transform: translateX(200px) scaleX(1); }
-            50% { transform: translateX(200px) scaleX(-1); }
-            99% { transform: translateX(-40px) scaleX(-1); }
-            100% { transform: translateX(-40px) scaleX(1); }
-        }
-        .fish-anim { animation: fish-swim 8s linear infinite; }
-        .fish-anim-2 { animation: fish-swim 11s 2s linear infinite; }
-
-        @keyframes seaweed-sway {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
-        }
-        .seaweed { animation: seaweed-sway 3s ease-in-out infinite; transform-origin: bottom center; }
-
-        @keyframes mix-shake {
-            0% { transform: translate(0, 0); }
-            10% { transform: translate(-2px, -2px); }
-            20% { transform: translate(2px, 2px); }
-            30% { transform: translate(-2px, 2px); }
-            40% { transform: translate(2px, -2px); }
-            50% { transform: translate(-1px, 1px); }
-            60% { transform: translate(1px, -1px); }
-            70% { transform: translate(0, 2px); }
-            80% { transform: translate(-2px, 0); }
-            90% { transform: translate(1px, 1px); }
-            100% { transform: translate(0, 0); }
-        }
-        .mixing .liquid-layer {
-            animation: mix-shake 0.5s infinite;
-            filter: blur(1px);
-            opacity: 0.8;
-        }
-
-        @keyframes float-person {
-            0%, 100% { transform: translateY(0) rotate(-2deg); }
-            50% { transform: translateY(-6px) rotate(2deg); }
-        }
-        .float-person { animation: float-person 3s ease-in-out infinite; }
-
-        @keyframes gentle-bob {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
-        }
-        .gentle-bob { animation: gentle-bob 2s ease-in-out infinite; }
-
-        .scale-plate {
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Guide panel animation */
-        @keyframes fade-slide-in {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .guide-step { animation: fade-slide-in 0.3s ease-out forwards; }
-
-        /* Density result highlight */
-        @keyframes highlight-pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.3); }
-            50% { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
-        }
-        .density-highlight { animation: highlight-pulse 2s ease-in-out infinite; }
+        body{font-family:'Noto Sans KR',sans-serif;background:#f0f4f8;margin:0}
+        .cylinder-gradient{background:linear-gradient(90deg,rgba(255,255,255,.4) 0%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.4) 100%);border-left:1px solid rgba(255,255,255,.5);border-right:1px solid rgba(255,255,255,.5)}
+        .water-surface{transition:height .5s cubic-bezier(.4,0,.2,1)}
+        .liquid-layer{transition:all .8s ease-in-out}
+        .ocean-gradient{background:linear-gradient(to bottom,#bae6fd 0%,#7dd3fc 10%,#38bdf8 20%,#0284c7 50%,#075985 75%,#0c4a6e 100%)}
+        .diver-anim{transition:top 2s cubic-bezier(.45,.05,.55,.95)}
+        .ship-float{animation:ship-move 4s ease-in-out infinite}
+        @keyframes ship-move{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-4px) rotate(1.5deg)}}
+        @keyframes bubble-rise{0%{transform:translateY(0) translateX(0) scale(1);opacity:.7}50%{transform:translateY(-80px) translateX(-8px) scale(1.2);opacity:.5}100%{transform:translateY(-160px) translateX(4px) scale(.6);opacity:0}}
+        .bubble{animation:bubble-rise var(--dur,3s) var(--delay,0s) infinite ease-out}
+        @keyframes wave-move{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        .wave-anim{animation:wave-move 6s linear infinite}
+        @keyframes fish-swim{0%{transform:translateX(-40px) scaleX(1)}49%{transform:translateX(200px) scaleX(1)}50%{transform:translateX(200px) scaleX(-1)}99%{transform:translateX(-40px) scaleX(-1)}100%{transform:translateX(-40px) scaleX(1)}}
+        .fish-anim{animation:fish-swim 8s linear infinite}
+        .fish-anim-2{animation:fish-swim 11s 2s linear infinite}
+        @keyframes seaweed-sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+        .seaweed{animation:seaweed-sway 3s ease-in-out infinite;transform-origin:bottom center}
+        @keyframes mix-shake{0%{transform:translate(0,0)}25%{transform:translate(-2px,2px)}50%{transform:translate(2px,-2px)}75%{transform:translate(-1px,1px)}100%{transform:translate(0,0)}}
+        .mixing .liquid-layer{animation:mix-shake .5s infinite;filter:blur(1px);opacity:.8}
+        @keyframes float-person{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+        .float-person{animation:float-person 3s ease-in-out infinite}
+        @keyframes gentle-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+        .gentle-bob{animation:gentle-bob 2s ease-in-out infinite}
+        @keyframes fade-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .3s ease-out forwards}
+        @keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.3)}50%{box-shadow:0 0 0 8px rgba(59,130,246,0)}}
+        .density-highlight{animation:pulse-glow 2s ease-in-out infinite}
+        @keyframes confetti-fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+        .confetti{animation:confetti-fall 3s ease-in forwards}
+        @keyframes achievement-pop{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+        .achievement-pop{animation:achievement-pop .5s ease-out forwards}
+        @keyframes stamp{0%{transform:scale(3) rotate(-15deg);opacity:0}60%{transform:scale(.9) rotate(5deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
+        .stamp-anim{animation:stamp .6s ease-out forwards}
+        .scale-plate{transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+        .locked-overlay{position:absolute;inset:0;background:rgba(148,163,184,.25);border-radius:inherit;display:flex;align-items:center;justify-content:center;z-index:2}
+        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        .shimmer{background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%);background-size:200% 100%;animation:shimmer 2s infinite}
+        .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center}
+        .cert-bg{background:linear-gradient(135deg,#fef3c7 0%,#fffbeb 30%,#fef9c3 60%,#fefce8 100%)}
     </style>
 </head>
 <body>
-    <div id="root"></div>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useRef,useCallback,createContext,useContext}=React;
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useCallback } = React;
+/* ===== SOUND ENGINE ===== */
+const SFX={
+    _ctx:null,
+    _getCtx(){if(!this._ctx)this._ctx=new(window.AudioContext||window.webkitAudioContext)();return this._ctx},
+    play(type){
+        try{
+            const c=this._getCtx();
+            if(c.state==='suspended')c.resume();
+            const now=c.currentTime;
+            switch(type){
+                case'click':{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(880,now);g.gain.setValueAtTime(.08,now);g.gain.exponentialRampToValueAtTime(.001,now+.1);o.start(now);o.stop(now+.1);break}
+                case'place':{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.setValueAtTime(440,now);o.frequency.exponentialRampToValueAtTime(220,now+.2);g.gain.setValueAtTime(.1,now);g.gain.exponentialRampToValueAtTime(.001,now+.25);o.start(now);o.stop(now+.25);break}
+                case'splash':{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.setValueAtTime(600,now);o.frequency.exponentialRampToValueAtTime(100,now+.4);g.gain.setValueAtTime(.06,now);g.gain.exponentialRampToValueAtTime(.001,now+.4);o.start(now);o.stop(now+.4);break}
+                case'success':{[523,659,784].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(f,now+i*.12);g.gain.setValueAtTime(.12,now+i*.12);g.gain.exponentialRampToValueAtTime(.001,now+i*.12+.3);o.start(now+i*.12);o.stop(now+i*.12+.3)});break}
+                case'error':{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.setValueAtTime(180,now);g.gain.setValueAtTime(.06,now);g.gain.exponentialRampToValueAtTime(.001,now+.3);o.start(now);o.stop(now+.3);break}
+                case'achievement':{[523,659,784,1047].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(f,now+i*.15);g.gain.setValueAtTime(.15,now+i*.15);g.gain.exponentialRampToValueAtTime(.001,now+i*.15+.4);o.start(now+i*.15);o.stop(now+i*.15+.4)});break}
+                case'fanfare':{const notes=[523,659,784,659,784,1047];notes.forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(f,now+i*.18);g.gain.setValueAtTime(.15,now+i*.18);g.gain.exponentialRampToValueAtTime(.001,now+i*.18+.35);o.start(now+i*.18);o.stop(now+i*.18+.35)});break}
+                case'reset':{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(600,now);o.frequency.exponentialRampToValueAtTime(300,now+.15);g.gain.setValueAtTime(.07,now);g.gain.exponentialRampToValueAtTime(.001,now+.15);o.start(now);o.stop(now+.15);break}
+                case'dive':{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(800,now);o.frequency.exponentialRampToValueAtTime(200,now+.6);g.gain.setValueAtTime(.1,now);g.gain.exponentialRampToValueAtTime(.001,now+.6);o.start(now);o.stop(now+.6);break}
+            }
+        }catch(e){}
+    }
+};
 
-        // --- Icon Components ---
-        const Icon = ({ size = 24, color = "currentColor", children, className, ...props }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
-        );
-        const Beaker = (props) => ( <Icon {...props}><path d="M4.5 3h15" /><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3" /><path d="M6 14h12" /></Icon> );
-        const FlaskConical = (props) => ( <Icon {...props}><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" /><path d="M8.5 2h7" /><path d="M7 16h10" /></Icon> );
-        const Info = (props) => ( <Icon {...props}><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></Icon> );
-        const RefreshCcw = (props) => ( <Icon {...props}><path d="M3 2v6h6" /><path d="M21 12A9 9 0 0 0 6 5.3L3 8" /><path d="M21 22v-6h-6" /><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" /></Icon> );
-        const Droplets = (props) => ( <Icon {...props}><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.8-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z" /><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.35" /></Icon> );
-        const Waves = (props) => ( <Icon {...props}><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" /><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" /><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" /></Icon> );
-        const Thermometer = (props) => ( <Icon {...props}><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" /></Icon> );
-        const CircleDashed = (props) => ( <Icon {...props}><path d="M10.1 2.182a10 10 0 0 1 3.8 0" /><path d="M17.609 3.721a10 10 0 0 1 2.69 2.7" /><path d="M21.818 10.1a10 10 0 0 1 0 3.8" /><path d="M20.279 17.609a10 10 0 0 1-2.7 2.69" /><path d="M13.9 21.818a10 10 0 0 1-3.8 0" /><path d="M6.391 20.279a10 10 0 0 1-2.69-2.7" /><path d="M2.182 13.9a10 10 0 0 1 0-3.8" /><path d="M3.721 6.391a10 10 0 0 1 2.7-2.69" /></Icon> );
-        const CheckCircle = (props) => ( <Icon {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></Icon> );
-        const ArrowRight = (props) => ( <Icon {...props}><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></Icon> );
+/* ===== ICONS ===== */
+const Icon=({size=24,color="currentColor",children,className,...p})=>(
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...p}>{children}</svg>
+);
+const Beaker=p=>(<Icon {...p}><path d="M4.5 3h15"/><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3"/><path d="M6 14h12"/></Icon>);
+const FlaskConical=p=>(<Icon {...p}><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></Icon>);
+const InfoIcon=p=>(<Icon {...p}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></Icon>);
+const RefreshCcw=p=>(<Icon {...p}><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></Icon>);
+const Droplets=p=>(<Icon {...p}><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.8-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.35"/></Icon>);
+const Waves=p=>(<Icon {...p}><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></Icon>);
+const Thermometer=p=>(<Icon {...p}><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></Icon>);
+const CircleDashed=p=>(<Icon {...p}><path d="M10.1 2.182a10 10 0 0 1 3.8 0"/><path d="M17.609 3.721a10 10 0 0 1 2.69 2.7"/><path d="M21.818 10.1a10 10 0 0 1 0 3.8"/><path d="M20.279 17.609a10 10 0 0 1-2.7 2.69"/><path d="M13.9 21.818a10 10 0 0 1-3.8 0"/><path d="M6.391 20.279a10 10 0 0 1-2.69-2.7"/><path d="M2.182 13.9a10 10 0 0 1 0-3.8"/><path d="M3.721 6.391a10 10 0 0 1 2.7-2.69"/></Icon>);
+const Trophy=p=>(<Icon {...p}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></Icon>);
 
-        // --- Data ---
-        const MATERIALS = [
-            { id: 'iron_s', name: '철 조각 (소)', color: '#64748b', mass: 39.35, volume: 5, density: 7.87, size: 'small', group: 'iron' },
-            { id: 'iron_l', name: '철 조각 (대)', color: '#475569', mass: 78.7, volume: 10, density: 7.87, size: 'large', group: 'iron' },
-            { id: 'alu_s', name: '알루미늄 (소)', color: '#cbd5e1', mass: 13.5, volume: 5, density: 2.70, size: 'small', group: 'alu' },
-            { id: 'alu_l', name: '알루미늄 (대)', color: '#94a3b8', mass: 27.0, volume: 10, density: 2.70, size: 'large', group: 'alu' },
-            { id: 'mystery_a', name: '미지의 물질 A', color: '#fbbf24', mass: 96.6, volume: 5, density: 19.32, size: 'small', group: 'mystery' },
-            { id: 'mystery_b', name: '미지의 물질 B', color: '#10b981', mass: 89.6, volume: 10, density: 8.96, size: 'large', group: 'mystery' },
-        ];
+/* ===== DATA ===== */
+const MATERIALS=[
+    {id:'iron_s',name:'철 조각 (소)',color:'#64748b',mass:39.35,volume:5,density:7.87,size:'small',group:'iron'},
+    {id:'iron_l',name:'철 조각 (대)',color:'#475569',mass:78.7,volume:10,density:7.87,size:'large',group:'iron'},
+    {id:'alu_s',name:'알루미늄 (소)',color:'#cbd5e1',mass:13.5,volume:5,density:2.70,size:'small',group:'alu'},
+    {id:'alu_l',name:'알루미늄 (대)',color:'#94a3b8',mass:27.0,volume:10,density:2.70,size:'large',group:'alu'},
+    {id:'mystery_a',name:'미지의 물질 A',color:'#fbbf24',mass:96.5,volume:5,density:19.30,size:'small',group:'mystery'},
+    {id:'mystery_b',name:'미지의 물질 B',color:'#10b981',mass:89.6,volume:10,density:8.96,size:'large',group:'mystery'},
+];
+const MAT_ORDER=['iron_s','iron_l','alu_s','alu_l','mystery_a','mystery_b'];
 
-        const LIQUIDS = [
-            { id: 'honey', name: '꿀', density: 1.42, color: '#d97706', textColor: 'white' },
-            { id: 'soap', name: '주방세제', density: 1.06, color: '#ec4899', textColor: 'white' },
-            { id: 'water', name: '물', density: 1.00, color: '#3b82f6', textColor: 'white' },
-            { id: 'oil', name: '식용유', density: 0.92, color: '#eab308', textColor: 'black' },
-            { id: 'alcohol', name: '에탄올', density: 0.79, color: '#a855f7', textColor: 'white' },
-        ];
+const LIQUIDS=[
+    {id:'honey',name:'꿀',density:1.42,color:'#d97706',textColor:'white'},
+    {id:'water',name:'물',density:1.00,color:'#3b82f6',textColor:'white'},
+    {id:'oil',name:'식용유',density:0.92,color:'#eab308',textColor:'black'},
+];
 
-        // --- Graphic Components ---
-        const Bubbles = ({ count = 6 }) => (
-            <>{[...Array(count)].map((_, i) => (
-                <div key={i} className="bubble absolute rounded-full bg-white bg-opacity-30"
-                    style={{
-                        width: 4 + Math.random()*8,
-                        height: 4 + Math.random()*8,
-                        left: `${10 + Math.random()*80}%`,
-                        bottom: `${Math.random()*30}%`,
-                        '--dur': `${2.5 + Math.random()*3}s`,
-                        '--delay': `${Math.random()*3}s`,
-                    }} />
-            ))}</>
-        );
+const DENSITY_REF=[
+    {name:'금',d:19.30},{name:'납',d:11.34},{name:'은',d:10.49},
+    {name:'구리',d:8.96},{name:'철',d:7.87},{name:'알루미늄',d:2.70},
+];
 
-        const OceanWaves = () => (
-            <div className="absolute top-[14%] left-0 w-full h-6 overflow-hidden z-10 pointer-events-none">
-                <svg className="wave-anim" width="200%" height="24" viewBox="0 0 1200 24" preserveAspectRatio="none">
-                    <path d="M0 12 Q30 4 60 12 T120 12 T180 12 T240 12 T300 12 T360 12 T420 12 T480 12 T540 12 T600 12 T660 12 T720 12 T780 12 T840 12 T900 12 T960 12 T1020 12 T1080 12 T1140 12 T1200 12 V24 H0Z" fill="#7dd3fc" opacity="0.5"/>
-                </svg>
-            </div>
-        );
+/* ===== GRAPHICS ===== */
+const Bubbles=({count=6})=>(<>{[...Array(count)].map((_,i)=><div key={i} className="bubble absolute rounded-full bg-white bg-opacity-30" style={{width:4+Math.random()*8,height:4+Math.random()*8,left:`${10+Math.random()*80}%`,bottom:`${Math.random()*30}%`,'--dur':`${2.5+Math.random()*3}s`,'--delay':`${Math.random()*3}s`}}/>)}</>);
+const OceanWaves=()=>(<div className="absolute top-[14%] left-0 w-full h-6 overflow-hidden z-10 pointer-events-none"><svg className="wave-anim" width="200%" height="24" viewBox="0 0 1200 24" preserveAspectRatio="none"><path d="M0 12 Q30 4 60 12 T120 12 T180 12 T240 12 T300 12 T360 12 T420 12 T480 12 T540 12 T600 12 T660 12 T720 12 T780 12 T840 12 T900 12 T960 12 T1020 12 T1080 12 T1140 12 T1200 12 V24 H0Z" fill="#7dd3fc" opacity=".5"/></svg></div>);
+const Fish=({className,color="#f59e0b",y="60%"})=>(<div className={`absolute ${className}`} style={{top:y,left:0}}><svg width="28" height="16" viewBox="0 0 28 16"><ellipse cx="12" cy="8" rx="10" ry="6" fill={color} opacity=".7"/><polygon points="22,8 28,3 28,13" fill={color} opacity=".7"/><circle cx="7" cy="7" r="1.5" fill="white"/><circle cx="7" cy="7" r=".8" fill="black"/></svg></div>);
+const Seaweed=({x,h=40})=>(<div className="seaweed absolute bottom-0" style={{left:x}}><svg width="16" height={h} viewBox={`0 0 16 ${h}`}><path d={`M8 ${h} Q2 ${h*.7} 10 ${h*.5} Q4 ${h*.3} 8 0`} fill="none" stroke="#16a34a" strokeWidth="3" opacity=".6"/></svg></div>);
+const RealisticDiver=({weightCount})=>(<svg width="80" height="100" viewBox="0 0 100 120"><rect x="35" y="30" width="20" height="45" rx="10" fill="#fbbf24" stroke="#d97706" strokeWidth="1"/><path d="M40 25 Q50 20 60 25 L65 70 Q50 80 35 70 Z" fill="#1e293b"/><circle cx="50" cy="20" r="12" fill="#334155"/><rect x="42" y="15" width="16" height="8" rx="2" fill="#94a3b8"/><path d="M40 30 L25 50" stroke="#1e293b" strokeWidth="8" strokeLinecap="round"/><path d="M60 30 L75 50" stroke="#1e293b" strokeWidth="8" strokeLinecap="round"/><path d="M42 70 L35 95" stroke="#1e293b" strokeWidth="8" strokeLinecap="round"/><path d="M58 70 L65 95" stroke="#1e293b" strokeWidth="8" strokeLinecap="round"/><rect x="38" y="65" width="24" height="6" fill="#475569" rx="1"/>{[...Array(weightCount)].map((_,i)=><rect key={i} x={40+i*4} y={66} width="3" height="4" fill="#fef08a" rx=".5" stroke="#854d0e" strokeWidth=".3"/>)}</svg>);
+const SimpleShip=()=>(<div className="ship-float"><svg width="100" height="50" viewBox="0 0 120 60"><path d="M10 40 L110 40 L100 58 L20 58 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1.5"/><rect x="40" y="18" width="40" height="22" rx="2" fill="white" stroke="#94a3b8" strokeWidth="1.5"/><rect x="48" y="22" width="8" height="8" rx="1" fill="#bfdbfe"/><rect x="62" y="22" width="8" height="8" rx="1" fill="#bfdbfe"/><rect x="55" y="5" width="6" height="15" fill="#64748b"/><rect x="52" y="4" width="12" height="4" rx="1" fill="#ef4444"/></svg></div>);
+const LifeJacketPerson=()=>(<div className="float-person"><svg width="50" height="65" viewBox="0 0 60 80"><circle cx="30" cy="18" r="9" fill="#fecaca"/><circle cx="27" cy="17" r="1" fill="#44403c"/><circle cx="33" cy="17" r="1" fill="#44403c"/><rect x="16" y="28" width="28" height="22" rx="6" fill="#f97316"/><rect x="20" y="30" width="20" height="18" rx="3" fill="#fb923c"/><path d="M16 38 L8 45" stroke="#fecaca" strokeWidth="4" strokeLinecap="round"/><path d="M44 38 L52 45" stroke="#fecaca" strokeWidth="4" strokeLinecap="round"/></svg></div>);
 
-        const Fish = ({ className, color = "#f59e0b", y = "60%" }) => (
-            <div className={`absolute ${className}`} style={{ top: y, left: 0 }}>
-                <svg width="28" height="16" viewBox="0 0 28 16">
-                    <ellipse cx="12" cy="8" rx="10" ry="6" fill={color} opacity="0.7"/>
-                    <polygon points="22,8 28,3 28,13" fill={color} opacity="0.7"/>
-                    <circle cx="7" cy="7" r="1.5" fill="white"/><circle cx="7" cy="7" r="0.8" fill="black"/>
-                </svg>
-            </div>
-        );
+/* ===== CONFETTI ===== */
+const Confetti=()=>{
+    const colors=['#ef4444','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899'];
+    return <div className="fixed inset-0 pointer-events-none z-50">{[...Array(40)].map((_,i)=><div key={i} className="confetti absolute" style={{left:`${Math.random()*100}%`,top:'-10px',width:8+Math.random()*8,height:8+Math.random()*8,background:colors[i%colors.length],borderRadius:Math.random()>.5?'50%':'0',animationDelay:`${Math.random()*1.5}s`,animationDuration:`${2+Math.random()*2}s`}}/>)}</div>;
+};
 
-        const Seaweed = ({ x, h = 40 }) => (
-            <div className="seaweed absolute bottom-0" style={{ left: x }}>
-                <svg width="16" height={h} viewBox={`0 0 16 ${h}`}>
-                    <path d={`M8 ${h} Q2 ${h*0.7} 10 ${h*0.5} Q4 ${h*0.3} 8 0`} fill="none" stroke="#16a34a" strokeWidth="3" opacity="0.6"/>
-                </svg>
-            </div>
-        );
-
-        const RealisticDiver = ({ weightCount }) => (
-            <svg width="80" height="100" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-                <rect x="35" y="30" width="20" height="45" rx="10" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
-                <path d="M40 25 Q50 20 60 25 L65 70 Q50 80 35 70 Z" fill="#1e293b" />
-                <circle cx="50" cy="20" r="12" fill="#334155" />
-                <rect x="42" y="15" width="16" height="8" rx="2" fill="#94a3b8" />
-                <path d="M40 30 L25 50" stroke="#1e293b" strokeWidth="8" strokeLinecap="round" />
-                <path d="M60 30 L75 50" stroke="#1e293b" strokeWidth="8" strokeLinecap="round" />
-                <path d="M42 70 L35 95" stroke="#1e293b" strokeWidth="8" strokeLinecap="round" />
-                <path d="M58 70 L65 95" stroke="#1e293b" strokeWidth="8" strokeLinecap="round" />
-                <rect x="38" y="65" width="24" height="6" fill="#475569" rx="1" />
-                {[...Array(weightCount)].map((_, i) => (
-                    <rect key={i} x={40 + i*4} y={66} width="3" height="4" fill="#fef08a" rx="0.5" stroke="#854d0e" strokeWidth="0.3"/>
-                ))}
-            </svg>
-        );
-
-        const SimpleShip = () => (
-            <div className="ship-float">
-                <svg width="100" height="50" viewBox="0 0 120 60">
-                    <path d="M10 40 L110 40 L100 58 L20 58 Z" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1.5" />
-                    <rect x="40" y="18" width="40" height="22" rx="2" fill="white" stroke="#94a3b8" strokeWidth="1.5" />
-                    <rect x="48" y="22" width="8" height="8" rx="1" fill="#bfdbfe" />
-                    <rect x="62" y="22" width="8" height="8" rx="1" fill="#bfdbfe" />
-                    <rect x="55" y="5" width="6" height="15" fill="#64748b" />
-                    <rect x="52" y="4" width="12" height="4" rx="1" fill="#ef4444" />
-                </svg>
-            </div>
-        );
-
-        const LifeJacketPerson = () => (
-            <div className="float-person">
-                <svg width="50" height="65" viewBox="0 0 60 80">
-                    <circle cx="30" cy="18" r="9" fill="#fecaca" />
-                    <path d="M24 15 Q30 12 36 15" stroke="#7c2d12" strokeWidth="1.5" fill="none"/>
-                    <circle cx="27" cy="17" r="1" fill="#44403c"/><circle cx="33" cy="17" r="1" fill="#44403c"/>
-                    <rect x="16" y="28" width="28" height="22" rx="6" fill="#f97316" />
-                    <rect x="20" y="30" width="20" height="18" rx="3" fill="#fb923c" />
-                    <path d="M16 38 L8 45" stroke="#fecaca" strokeWidth="4" strokeLinecap="round"/>
-                    <path d="M44 38 L52 45" stroke="#fecaca" strokeWidth="4" strokeLinecap="round"/>
-                </svg>
-            </div>
-        );
-
-        // --- Tab 1: Explore ---
-        const ExperimentLab = () => {
-            const [selectedObj, setSelectedObj] = useState(null);
-            const [scaleValue, setScaleValue] = useState(0);
-            const [onScale, setOnScale] = useState(null);
-            const [baseWaterVolume] = useState(50.0);
-            const [inCylinder, setInCylinder] = useState(null);
-            const [temperature, setTemperature] = useState(20);
-            const [measurements, setMeasurements] = useState({});
-            const [guideStep, setGuideStep] = useState(0);
-            const [showConclusion, setShowConclusion] = useState(false);
-
-            const currentWaterVolume = baseWaterVolume + (baseWaterVolume * 0.0004 * (temperature - 20));
-            const totalVolume = currentWaterVolume + (inCylinder ? inCylinder.volume : 0);
-
-            // Check if all materials measured
-            const allMeasured = MATERIALS.every(m => measurements[m.id]?.mass && measurements[m.id]?.volume);
-            const canShowConclusion = Object.keys(measurements).length >= 4;
-
-            const handleSelect = (obj) => {
-                if (inCylinder || onScale) return;
-                setSelectedObj(obj);
-                if (guideStep === 0) setGuideStep(1);
-            };
-
-            const placeOnScale = () => {
-                if (!selectedObj) return;
-                setOnScale(selectedObj);
-                const m = selectedObj;
-                setSelectedObj(null);
-                setTimeout(() => {
-                    setScaleValue(m.mass.toFixed(2));
-                    setMeasurements(prev => ({
-                        ...prev,
-                        [m.id]: { ...prev[m.id], mass: m.mass, name: m.name, group: m.group, density: m.density }
-                    }));
-                    if (guideStep < 2) setGuideStep(2);
-                }, 400);
-            };
-
-            const placeInCylinder = () => {
-                if (!selectedObj) return;
-                const m = selectedObj;
-                setInCylinder(m);
-                setSelectedObj(null);
-                setMeasurements(prev => ({
-                    ...prev,
-                    [m.id]: { ...prev[m.id], volume: m.volume, name: m.name, group: m.group, density: m.density }
-                }));
-                if (guideStep < 3) setGuideStep(3);
-            };
-
-            const resetExperiment = () => {
-                setOnScale(null);
-                setInCylinder(null);
-                setSelectedObj(null);
-                setScaleValue(0);
-            };
-
-            const resetAll = () => {
-                resetExperiment();
-                setMeasurements({});
-                setGuideStep(0);
-                setShowConclusion(false);
-            };
-
-            const getGuideMessage = () => {
-                if (guideStep === 0) return { title: "시작하기", text: "아래 '실험 재료'에서 측정할 물질을 클릭하세요.", icon: "👆" };
-                if (guideStep === 1) return { title: "측정 도구 선택", text: "저울에 '올리기'로 질량을, 눈금 실린더에 '넣기'로 부피를 측정하세요.", icon: "⚖️" };
-                if (guideStep === 2) return { title: "질량 측정 완료!", text: "저울에서 질량을 확인했습니다. '실험 도구 비우기'를 누른 뒤, 같은 물질의 부피도 측정해보세요.", icon: "✅" };
-                if (guideStep === 3) return { title: "부피 측정 완료!", text: "눈금 실린더에서 부피 변화를 확인하세요. (늘어난 부피 = 물질의 부피) '실험 도구 비우기' 후 다른 물질도 측정해보세요.", icon: "✅" };
-                return { title: "", text: "", icon: "" };
-            };
-            const guide = getGuideMessage();
-
-            const getDensityForMeasured = (id) => {
-                const m = measurements[id];
-                if (m?.mass && m?.volume) return (m.mass / m.volume).toFixed(2);
-                return null;
-            };
-
-            return (
-                <div className="flex flex-col lg:flex-row h-full gap-4 p-4">
-                    {/* Left: Lab area */}
-                    <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 flex flex-col relative overflow-hidden">
-                        <div className="flex flex-wrap justify-between items-center mb-6 gap-2">
-                            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                                <FlaskConical className="text-blue-600" />
-                                탐구: 질량과 부피를 측정하여 밀도 구하기
-                            </h2>
-                            <div className="bg-orange-50 p-2 rounded-lg border border-orange-200 flex items-center gap-3">
-                                <Thermometer className="text-orange-500" size={18} />
-                                <div className="flex flex-col">
-                                    <span className="text-xs text-orange-800 font-bold">물의 온도: {temperature}°C</span>
-                                    <input type="range" min="0" max="80" value={temperature} onChange={(e) => setTemperature(parseInt(e.target.value))} className="w-28 h-2 bg-orange-200 rounded-lg appearance-none cursor-pointer" />
-                                </div>
-                            </div>
+/* ===== CERTIFICATE MODAL ===== */
+const CertificateModal=({onClose})=>{
+    const [show,setShow]=useState(false);
+    useEffect(()=>{setTimeout(()=>setShow(true),100);SFX.play('fanfare')},[]);
+    return(
+        <div className="modal-backdrop" onClick={onClose}>
+            <div onClick={e=>e.stopPropagation()} className={`cert-bg rounded-3xl p-1 shadow-2xl max-w-lg w-[90vw] transition-all duration-500 ${show?'scale-100 opacity-100':'scale-75 opacity-0'}`}>
+                <div className="border-4 border-double border-amber-400 rounded-2xl p-8 text-center relative overflow-hidden" id="certificate">
+                    <div className="absolute top-4 right-4 text-4xl">🏆</div>
+                    <div className="absolute top-4 left-4 text-4xl">🎖️</div>
+                    <h2 className="text-amber-800 text-sm font-bold tracking-widest mb-2">CERTIFICATE OF ACHIEVEMENT</h2>
+                    <h1 className="text-3xl font-black text-amber-900 mb-4">🎉 축하합니다! 🎉</h1>
+                    <div className="w-24 h-0.5 bg-amber-400 mx-auto mb-4"></div>
+                    <p className="text-amber-800 text-lg font-bold mb-6">밀도 실험의 모든 미션을<br/>성공적으로 완료하였습니다!</p>
+                    <div className="flex justify-center gap-4 mb-6">
+                        <div className="bg-amber-100 border border-amber-300 rounded-xl p-3 text-center w-28">
+                            <div className="text-2xl mb-1">🔬</div>
+                            <div className="text-[10px] font-bold text-amber-800">미션 1</div>
+                            <div className="text-[9px] text-amber-600">탐구 완료</div>
                         </div>
-
-                        {/* Guide Banner */}
-                        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 guide-step" key={guideStep}>
-                            <div className="flex items-start gap-3">
-                                <span className="text-2xl">{guide.icon}</span>
-                                <div>
-                                    <h4 className="font-bold text-blue-800 text-sm">{guide.title}</h4>
-                                    <p className="text-blue-700 text-xs leading-relaxed">{guide.text}</p>
-                                </div>
-                            </div>
+                        <div className="bg-amber-100 border border-amber-300 rounded-xl p-3 text-center w-28">
+                            <div className="text-2xl mb-1">🧪</div>
+                            <div className="text-[10px] font-bold text-amber-800">미션 2</div>
+                            <div className="text-[9px] text-amber-600">밀도탑 완료</div>
                         </div>
-
-                        {/* Lab instruments */}
-                        <div className="flex-1 flex flex-row justify-around items-end gap-8 pb-4">
-                            {/* Scale */}
-                            <div className="flex flex-col items-center relative z-10 w-48">
-                                <div className="w-full h-8 bg-gray-400 rounded-lg shadow-md mt-auto"></div>
-                                <div className={`w-40 h-4 bg-gray-300 rounded-t-lg mx-auto relative -mt-12 mb-2 scale-plate ${onScale ? 'translate-y-0.5' : ''}`}>
-                                    {onScale && <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 shadow-lg mb-0 border border-gray-500" style={{ backgroundColor: onScale.color, width: onScale.size === 'large' ? '48px' : '32px', height: onScale.size === 'large' ? '48px' : '32px', borderRadius: '4px' }}></div>}
-                                </div>
-                                <div className="bg-gray-800 text-green-400 font-mono text-2xl px-4 py-2 rounded-lg border-4 border-gray-300 shadow-inner w-full text-center mt-4">
-                                    {scaleValue} <span className="text-sm">g</span>
-                                </div>
-                                <span className="text-gray-500 text-sm mt-2 font-medium">전자 저울</span>
-                                {selectedObj && !onScale && !inCylinder && (
-                                    <button onClick={placeOnScale} className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-3 py-1.5 rounded-lg shadow-lg text-sm animate-pulse whitespace-nowrap font-medium">⬇ 올리기</button>
-                                )}
-                            </div>
-                            {/* Cylinder */}
-                            <div className="flex flex-col items-center relative w-32">
-                                <div className="relative w-24 h-64 border-l-2 border-r-2 border-b-4 border-gray-400 rounded-b-xl bg-white bg-opacity-50 overflow-hidden cylinder-gradient">
-                                    {[...Array(10)].map((_, i) => (
-                                        <div key={i} className="absolute w-full border-t border-gray-300" style={{bottom: `${(i+1)*10}%`}}>
-                                            <span className="absolute right-1 -top-3 text-[10px] text-gray-400">{(i+1)*10}</span>
-                                        </div>
-                                    ))}
-                                    <div className="absolute bottom-0 w-full bg-blue-400 bg-opacity-60 water-surface" style={{ height: `${(totalVolume / 100) * 100}%` }}></div>
-                                    {inCylinder && (
-                                        <div className="absolute left-1/2 transform -translate-x-1/2 shadow-lg border border-gray-600" style={{ bottom: '10%', backgroundColor: inCylinder.color, width: inCylinder.size === 'large' ? '30px' : '20px', height: inCylinder.size === 'large' ? '30px' : '20px', borderRadius: '4px', transition: 'bottom 1s ease-out' }}></div>
-                                    )}
-                                </div>
-                                <div className="mt-2 text-center">
-                                    <div className="font-bold text-blue-800 text-lg">{totalVolume.toFixed(2)} mL</div>
-                                    {inCylinder && <div className="text-xs text-gray-500">물질의 부피: {(totalVolume - currentWaterVolume).toFixed(2)} mL</div>}
-                                    <span className="text-gray-500 text-sm font-medium">눈금 실린더</span>
-                                </div>
-                                {selectedObj && !onScale && !inCylinder && (
-                                    <button onClick={placeInCylinder} className="absolute top-1/2 -right-14 bg-blue-500 text-white px-3 py-1.5 rounded-lg shadow-lg text-sm animate-pulse whitespace-nowrap font-medium">⬇ 넣기</button>
-                                )}
-                            </div>
+                        <div className="bg-amber-100 border border-amber-300 rounded-xl p-3 text-center w-28">
+                            <div className="text-2xl mb-1">🤿</div>
+                            <div className="text-[10px] font-bold text-amber-800">미션 3</div>
+                            <div className="text-[9px] text-amber-600">잠수 성공</div>
                         </div>
-
-                        {(onScale || inCylinder) && (
-                            <button onClick={resetExperiment} className="mt-2 w-full bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 font-medium flex items-center justify-center gap-2 border border-red-200">
-                                <RefreshCcw size={16} /> 실험 도구 비우기
-                            </button>
-                        )}
                     </div>
+                    <div className="stamp-anim inline-block border-4 border-red-500 rounded-full px-6 py-2 text-red-500 font-black text-xl rotate-[-8deg] opacity-80">PERFECT</div>
+                    <p className="text-xs text-amber-600 mt-4">가상 과학 실험실 : 물질의 특성 - 밀도</p>
+                    <p className="text-[10px] text-amber-400 mt-1">© 2026 과학이조선생(조승재) & 송쌤과학</p>
+                </div>
+                <div className="text-center mt-3 pb-2">
+                    <p className="text-amber-700 text-xs mb-2">📸 화면을 캡처하여 저장하세요!</p>
+                    <button onClick={onClose} className="bg-amber-600 text-white px-6 py-2 rounded-full text-sm font-bold hover:bg-amber-700">닫기</button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
-                    {/* Right: Materials + Results */}
-                    <div className="lg:w-96 flex flex-col gap-4 overflow-y-auto" style={{maxHeight: '100%'}}>
-                        {/* Materials */}
-                        <div className="bg-white p-4 rounded-xl shadow-lg">
-                            <h3 className="font-bold text-gray-800 mb-3 border-b pb-2 flex justify-between items-center">
-                                실험 재료
-                                <button onClick={resetAll} className="text-xs text-red-400 hover:text-red-600 underline">전체 초기화</button>
-                            </h3>
-                            <div className="grid grid-cols-3 gap-2">
-                                {MATERIALS.map((mat) => {
-                                    const d = getDensityForMeasured(mat.id);
-                                    const hasMass = measurements[mat.id]?.mass;
-                                    const hasVol = measurements[mat.id]?.volume;
-                                    return (
-                                        <div key={mat.id} onClick={() => handleSelect(mat)}
-                                            className={`cursor-pointer flex flex-col items-center p-2 rounded-lg border hover:scale-105 transition-transform relative ${selectedObj?.id === mat.id ? 'bg-blue-100 border-blue-500 ring-2 ring-blue-300' : 'bg-gray-50 border-gray-200'}`}>
-                                            <div className="rounded border border-gray-400 mb-1" style={{ backgroundColor: mat.color, width: mat.size === 'large' ? '36px' : '22px', height: mat.size === 'large' ? '36px' : '22px' }}></div>
-                                            <span className="text-[10px] font-medium text-center leading-tight">{mat.name}</span>
-                                            <div className="flex gap-1 mt-1">
-                                                {hasMass && <span className="text-[9px] bg-green-100 text-green-700 px-1 rounded">질량✓</span>}
-                                                {hasVol && <span className="text-[9px] bg-blue-100 text-blue-700 px-1 rounded">부피✓</span>}
-                                            </div>
-                                            {d && <div className="text-[9px] font-bold text-purple-600 mt-0.5">{d} g/cm³</div>}
-                                        </div>
+/* ===== INFO MODAL ===== */
+const InfoModal=({onClose})=>(
+    <div className="modal-backdrop" onClick={onClose}>
+        <div onClick={e=>e.stopPropagation()} className="bg-white rounded-2xl p-6 max-w-md w-[90vw] shadow-2xl fade-in">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="bg-blue-500 p-2 rounded-lg"><Beaker className="text-white" size={20}/></div>
+                <div><h2 className="font-bold text-gray-800">가상 과학 실험실</h2><p className="text-xs text-gray-500">I. 물질의 특성 - 1. 밀도</p></div>
+            </div>
+            <div className="space-y-3 text-sm text-gray-700">
+                <div className="bg-gray-50 p-3 rounded-lg">
+                    <h3 className="font-bold text-gray-800 mb-1">📋 학습 목표</h3>
+                    <p className="text-xs leading-relaxed">밀도의 개념을 이해하고, 밀도가 물질의 특성임을 실험을 통해 확인할 수 있다. 밀도를 이용하여 미지의 물질을 구별할 수 있다.</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                    <h3 className="font-bold text-gray-800 mb-1">🔬 사용 방법</h3>
+                    <ul className="text-xs space-y-1 leading-relaxed">
+                        <li><strong>1. 탐구</strong> — 물질의 질량·부피를 측정하여 밀도를 구하고 미지 물질을 감별합니다.</li>
+                        <li><strong>2. 해 보기</strong> — 서로 섞이지 않는 액체의 밀도 차이로 층이 분리되는 것을 관찰합니다.</li>
+                        <li><strong>3. 생활 속 밀도</strong> — 잠수부의 납 벨트 수를 조절하여 밀도와 뜨고 가라앉는 관계를 체험합니다.</li>
+                    </ul>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                    <h3 className="font-bold text-gray-800 mb-1">🏆 미션</h3>
+                    <p className="text-xs leading-relaxed">각 탭에서 미션을 완료하면 업적을 획득합니다. 3개 업적을 모두 달성하면 인증서가 발급됩니다!</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                    <h3 className="font-bold text-gray-800 mb-1">ℹ️ 정보</h3>
+                    <p className="text-xs text-gray-500">대상: 중학교 1학년 과학</p>
+                    <p className="text-xs text-gray-500">버전: 3.0 | 최종 수정: 2026-03-09</p>
+                    <p className="text-xs text-gray-500">제작: 과학이조선생(조승재) & 송쌤과학</p>
+                </div>
+            </div>
+            <button onClick={onClose} className="mt-4 w-full bg-gray-800 text-white py-2 rounded-lg font-bold text-sm">닫기</button>
+        </div>
+    </div>
+);
+
+/* ===== ACHIEVEMENT BAR ===== */
+const AchievementBar=({achievements,onShowCert})=>{
+    const total=Object.values(achievements).filter(Boolean).length;
+    return(
+        <div className="flex items-center gap-2">
+            {[{key:'explore',icon:'🔬',label:'탐구'},{key:'tower',icon:'🧪',label:'해보기'},{key:'diver',icon:'🤿',label:'잠수'}].map(a=>(
+                <div key={a.key} className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold border ${achievements[a.key]?'bg-yellow-100 border-yellow-400 text-yellow-800':'bg-slate-600 border-slate-500 text-slate-400'}`} title={a.label}>
+                    <span>{a.icon}</span>
+                    {achievements[a.key]&&<span>✓</span>}
+                </div>
+            ))}
+            {total===3&&<button onClick={onShowCert} className="ml-1 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-[10px] font-black animate-bounce">🏆 인증서</button>}
+        </div>
+    );
+};
+
+/* ===== TAB 1: EXPLORE ===== */
+const ExperimentLab=({onAchieve})=>{
+    const[selectedObj,setSelectedObj]=useState(null);
+    const[scaleValue,setScaleValue]=useState(0);
+    const[onScale,setOnScale]=useState(null);
+    const[inCylinder,setInCylinder]=useState(null);
+    const[temperature,setTemperature]=useState(20);
+    const baseWaterVolume=50.0;
+
+    // Track which materials have been fully measured
+    const[completed,setCompleted]=useState({});// {id: {mass:true,volume:true}}
+    const[userInputs,setUserInputs]=useState({});// {id: {mass:'',volume:''}}
+    const[inputErrors,setInputErrors]=useState({});
+    const[guideStep,setGuideStep]=useState(0);
+
+    // Mystery quiz
+    const[quizA,setQuizA]=useState('');
+    const[quizB,setQuizB]=useState('');
+    const[quizResult,setQuizResult]=useState(null);
+    const[showConclusion,setShowConclusion]=useState(false);
+
+    const currentWaterVolume=baseWaterVolume+(baseWaterVolume*0.0004*(temperature-20));
+    const totalVolume=currentWaterVolume+(inCylinder?inCylinder.volume:0);
+
+    // Which material index is currently unlocked
+    const getUnlockedIndex=()=>{
+        for(let i=0;i<MAT_ORDER.length;i++){
+            const c=completed[MAT_ORDER[i]];
+            if(!c||!c.mass||!c.volume) return i;
+        }
+        return MAT_ORDER.length;
+    };
+    const unlockedIdx=getUnlockedIndex();
+
+    const isUnlocked=(matId)=>{
+        const idx=MAT_ORDER.indexOf(matId);
+        return idx<=unlockedIdx;
+    };
+
+    const handleSelect=(obj)=>{
+        if(inCylinder||onScale)return;
+        if(!isUnlocked(obj.id))return;
+        SFX.play('click');
+        setSelectedObj(obj);
+        if(guideStep===0)setGuideStep(1);
+    };
+
+    const placeOnScale=()=>{
+        if(!selectedObj)return;
+        SFX.play('place');
+        const m=selectedObj;
+        setOnScale(m);
+        setSelectedObj(null);
+        setTimeout(()=>setScaleValue(m.mass.toFixed(2)),400);
+        setCompleted(p=>({...p,[m.id]:{...p[m.id],mass:true}}));
+        if(guideStep<2)setGuideStep(2);
+    };
+
+    const placeInCylinder=()=>{
+        if(!selectedObj)return;
+        SFX.play('splash');
+        const m=selectedObj;
+        setInCylinder(m);
+        setSelectedObj(null);
+        setCompleted(p=>({...p,[m.id]:{...p[m.id],volume:true}}));
+        if(guideStep<3)setGuideStep(3);
+    };
+
+    const resetExperiment=()=>{
+        SFX.play('reset');
+        setOnScale(null);setInCylinder(null);setSelectedObj(null);setScaleValue(0);
+    };
+
+    // User manual input
+    const handleInput=(matId,field,val)=>{
+        setUserInputs(p=>({...p,[matId]:{...p[matId],[field]:val}}));
+        setInputErrors(p=>{const n={...p};delete n[`${matId}_${field}`];return n});
+    };
+
+    const validateInput=(matId,field)=>{
+        const mat=MATERIALS.find(m=>m.id===matId);
+        const val=parseFloat(userInputs[matId]?.[field]||'');
+        const actual=field==='mass'?mat.mass:mat.volume;
+        if(isNaN(val)){setInputErrors(p=>({...p,[`${matId}_${field}`]:'숫자를 입력하세요'}));return false}
+        if(Math.abs(val-actual)>0.5){setInputErrors(p=>({...p,[`${matId}_${field}`]:'측정값을 다시 확인하세요'}));SFX.play('error');return false}
+        SFX.play('success');
+        return true;
+    };
+
+    const getUserDensity=(matId)=>{
+        const inp=userInputs[matId];
+        if(!inp?.mass||!inp?.volume)return null;
+        const m=parseFloat(inp.mass),v=parseFloat(inp.volume);
+        if(isNaN(m)||isNaN(v)||v===0)return null;
+        return(m/v).toFixed(2);
+    };
+
+    // Check all 4 base materials entered correctly
+    const allBaseComplete=['iron_s','iron_l','alu_s','alu_l'].every(id=>{
+        const d=getUserDensity(id);
+        return d!==null;
+    });
+
+    // Check mystery materials entered
+    const mysteryComplete=['mystery_a','mystery_b'].every(id=>getUserDensity(id)!==null);
+
+    const handleQuizSubmit=()=>{
+        if(quizA==='금'&&quizB==='구리'){
+            SFX.play('achievement');
+            setQuizResult('correct');
+            onAchieve('explore');
+        }else{
+            SFX.play('error');
+            setQuizResult('wrong');
+        }
+    };
+
+    const guideMessages=[
+        {title:"시작하기",text:"아래 '실험 재료'에서 첫 번째 물질(철 조각 소)을 클릭하세요.",icon:"👆"},
+        {title:"측정 도구 선택",text:"저울에 '올리기'로 질량을, 눈금 실린더에 '넣기'로 부피를 측정하세요.",icon:"⚖️"},
+        {title:"질량 측정 완료!",text:"저울의 숫자를 읽고 측정 결과표에 직접 입력하세요. '실험 도구 비우기' 후 부피도 측정하세요.",icon:"✏️"},
+        {title:"부피 측정 완료!",text:"눈금 실린더의 눈금을 읽고 부피 변화량을 결과표에 입력하세요. (물질의 부피 = 넣은 후 - 넣기 전)",icon:"📐"},
+    ];
+    const guide=guideMessages[Math.min(guideStep,3)];
+
+    return(
+        <div className="flex flex-col lg:flex-row h-full gap-3 p-3">
+            {/* Left: Lab */}
+            <div className="flex-1 bg-white rounded-2xl shadow-lg p-5 flex flex-col relative overflow-hidden">
+                <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
+                    <h2 className="text-base font-bold text-gray-800 flex items-center gap-2">
+                        <FlaskConical className="text-blue-600" size={20}/>
+                        탐구: 질량과 부피를 측정하여 밀도 구하기
+                    </h2>
+                    <div className="bg-orange-50 p-1.5 rounded-lg border border-orange-200 flex items-center gap-2">
+                        <Thermometer className="text-orange-500" size={16}/>
+                        <div className="flex flex-col">
+                            <span className="text-[10px] text-orange-800 font-bold">물의 온도: {temperature}°C</span>
+                            <input type="range" min="0" max="80" value={temperature} onChange={e=>setTemperature(parseInt(e.target.value))} className="w-24 h-1.5 bg-orange-200 rounded-lg appearance-none cursor-pointer"/>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Guide */}
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5 mb-3 fade-in" key={guideStep}>
+                    <div className="flex items-start gap-2">
+                        <span className="text-xl">{guide.icon}</span>
+                        <div><h4 className="font-bold text-blue-800 text-xs">{guide.title}</h4><p className="text-blue-700 text-[11px] leading-relaxed">{guide.text}</p></div>
+                    </div>
+                </div>
+
+                {/* Cylinder reading tip */}
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-2 mb-3 text-[10px] text-amber-800 flex items-start gap-2">
+                    <span className="text-base">⚠️</span>
+                    <div>
+                        <strong>눈금 실린더 읽는 법:</strong> 눈을 액체 표면과 같은 높이에 놓고, <strong>오목한 면(메니스커스)의 가장 낮은 부분</strong>을 읽습니다. 물질을 넣기 전 눈금(50.00mL)과 넣은 후 눈금의 차이가 물질의 부피입니다.
+                    </div>
+                </div>
+
+                {/* Instruments */}
+                <div className="flex-1 flex flex-row justify-around items-end gap-6 pb-2">
+                    {/* Scale */}
+                    <div className="flex flex-col items-center relative z-10 w-44">
+                        <div className="w-full h-7 bg-gray-400 rounded-lg shadow-md mt-auto"></div>
+                        <div className={`w-36 h-3.5 bg-gray-300 rounded-t-lg mx-auto relative -mt-10 mb-2 scale-plate ${onScale?'translate-y-0.5':''}`}>
+                            {onScale&&<div className="absolute bottom-full left-1/2 transform -translate-x-1/2 shadow-lg mb-0 border border-gray-500" style={{backgroundColor:onScale.color,width:onScale.size==='large'?'44px':'28px',height:onScale.size==='large'?'44px':'28px',borderRadius:'4px'}}></div>}
+                        </div>
+                        <div className="bg-gray-800 text-green-400 font-mono text-xl px-3 py-1.5 rounded-lg border-4 border-gray-300 shadow-inner w-full text-center mt-3">{scaleValue}<span className="text-xs ml-1">g</span></div>
+                        <span className="text-gray-500 text-xs mt-1.5 font-medium">전자 저울</span>
+                        {selectedObj&&!onScale&&!inCylinder&&<button onClick={placeOnScale} className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-lg shadow-lg text-xs animate-pulse whitespace-nowrap font-medium">⬇ 올리기</button>}
+                    </div>
+                    {/* Cylinder */}
+                    <div className="flex flex-col items-center relative w-28">
+                        <div className="relative w-20 h-56 border-l-2 border-r-2 border-b-4 border-gray-400 rounded-b-xl bg-white bg-opacity-50 overflow-hidden cylinder-gradient">
+                            {[...Array(10)].map((_,i)=><div key={i} className="absolute w-full border-t border-gray-300" style={{bottom:`${(i+1)*10}%`}}><span className="absolute right-0.5 -top-2.5 text-[9px] text-gray-400">{(i+1)*10}</span></div>)}
+                            <div className="absolute bottom-0 w-full bg-blue-400 bg-opacity-60 water-surface" style={{height:`${(totalVolume/100)*100}%`}}></div>
+                            {inCylinder&&<div className="absolute left-1/2 transform -translate-x-1/2 shadow-lg border border-gray-600" style={{bottom:'2%',backgroundColor:inCylinder.color,width:inCylinder.size==='large'?'28px':'18px',height:inCylinder.size==='large'?'28px':'18px',borderRadius:'3px',transition:'bottom 1s ease-out'}}></div>}
+                        </div>
+                        <div className="mt-1.5 text-center">
+                            <div className="font-bold text-blue-800 text-sm">{totalVolume.toFixed(2)} mL</div>
+                            {inCylinder&&<div className="text-[10px] text-gray-500">물질 부피: {(totalVolume-currentWaterVolume).toFixed(2)} mL</div>}
+                            <span className="text-gray-500 text-xs font-medium">눈금 실린더</span>
+                        </div>
+                        {selectedObj&&!onScale&&!inCylinder&&<button onClick={placeInCylinder} className="absolute top-1/2 -right-12 bg-blue-500 text-white px-2.5 py-1 rounded-lg shadow-lg text-xs animate-pulse whitespace-nowrap font-medium">⬇ 넣기</button>}
+                    </div>
+                </div>
+
+                {(onScale||inCylinder)&&<button onClick={resetExperiment} className="mt-2 w-full bg-red-50 text-red-600 py-1.5 rounded-lg hover:bg-red-100 font-medium flex items-center justify-center gap-2 border border-red-200 text-sm"><RefreshCcw size={14}/> 실험 도구 비우기</button>}
+            </div>
+
+            {/* Right panel */}
+            <div className="lg:w-[420px] flex flex-col gap-3 overflow-y-auto" style={{maxHeight:'100%'}}>
+                {/* Materials */}
+                <div className="bg-white p-3 rounded-xl shadow-lg">
+                    <h3 className="font-bold text-gray-800 mb-2 border-b pb-1.5 text-sm">실험 재료 (순서대로 측정하세요)</h3>
+                    <div className="grid grid-cols-3 gap-1.5">
+                        {MATERIALS.map((mat,idx)=>{
+                            const unlocked=isUnlocked(mat.id);
+                            const c=completed[mat.id];
+                            const done=c?.mass&&c?.volume;
+                            return(
+                                <div key={mat.id} onClick={()=>unlocked&&handleSelect(mat)} className={`relative flex flex-col items-center p-1.5 rounded-lg border transition-all ${!unlocked?'opacity-40 cursor-not-allowed bg-gray-100':'cursor-pointer hover:scale-105'} ${selectedObj?.id===mat.id?'bg-blue-100 border-blue-500 ring-2 ring-blue-300':done?'bg-green-50 border-green-300':'bg-gray-50 border-gray-200'}`}>
+                                    {!unlocked&&<div className="locked-overlay"><span className="text-lg">🔒</span></div>}
+                                    <div className="rounded border border-gray-400 mb-0.5" style={{backgroundColor:mat.color,width:mat.size==='large'?'32px':'20px',height:mat.size==='large'?'32px':'20px'}}></div>
+                                    <span className="text-[9px] font-medium text-center leading-tight">{mat.name}</span>
+                                    <div className="flex gap-0.5 mt-0.5">
+                                        {c?.mass&&<span className="text-[8px] bg-green-100 text-green-700 px-0.5 rounded">질량✓</span>}
+                                        {c?.volume&&<span className="text-[8px] bg-blue-100 text-blue-700 px-0.5 rounded">부피✓</span>}
+                                    </div>
+                                    {done&&<span className="absolute top-0.5 right-0.5 text-[10px]">✅</span>}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="flex items-center gap-1 mt-2 text-[9px] text-gray-400">
+                        <span>🔒 이전 물질을 모두 측정하면 다음 물질이 잠금 해제됩니다</span>
+                    </div>
+                </div>
+
+                {/* Manual Input Table */}
+                <div className="bg-white p-3 rounded-xl shadow-lg">
+                    <h3 className="font-bold text-gray-800 mb-2 border-b pb-1.5 text-sm">📝 측정 결과표 (직접 입력)</h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-[11px] border-collapse">
+                            <thead><tr className="bg-gray-100 text-gray-600">
+                                <th className="py-1 px-1.5 text-left rounded-tl-lg">물질</th>
+                                <th className="py-1 px-1.5 text-center">질량(g)</th>
+                                <th className="py-1 px-1.5 text-center">부피(cm³)</th>
+                                <th className="py-1 px-1.5 text-center rounded-tr-lg">밀도(g/cm³)</th>
+                            </tr></thead>
+                            <tbody>
+                                {MATERIALS.map(mat=>{
+                                    const c=completed[mat.id];
+                                    const unlocked=c?.mass||c?.volume;
+                                    const d=getUserDensity(mat.id);
+                                    if(!unlocked)return null;
+                                    return(
+                                        <tr key={mat.id} className="border-t border-gray-100">
+                                            <td className="py-1 px-1.5 flex items-center gap-1">
+                                                <div className="w-2.5 h-2.5 rounded" style={{backgroundColor:mat.color}}></div>
+                                                <span className="text-[10px]">{mat.name}</span>
+                                            </td>
+                                            <td className="py-1 px-1">
+                                                {c?.mass?<div>
+                                                    <input type="number" step="0.01" value={userInputs[mat.id]?.mass||''} onChange={e=>handleInput(mat.id,'mass',e.target.value)} onBlur={()=>userInputs[mat.id]?.mass&&validateInput(mat.id,'mass')} className={`w-16 text-center border rounded px-1 py-0.5 text-[11px] font-mono ${inputErrors[`${mat.id}_mass`]?'border-red-400 bg-red-50':'border-gray-300'}`} placeholder="?"/>
+                                                    {inputErrors[`${mat.id}_mass`]&&<div className="text-[8px] text-red-500 mt-0.5">{inputErrors[`${mat.id}_mass`]}</div>}
+                                                </div>:<span className="text-gray-300 text-[10px]">측정 필요</span>}
+                                            </td>
+                                            <td className="py-1 px-1">
+                                                {c?.volume?<div>
+                                                    <input type="number" step="0.1" value={userInputs[mat.id]?.volume||''} onChange={e=>handleInput(mat.id,'volume',e.target.value)} onBlur={()=>userInputs[mat.id]?.volume&&validateInput(mat.id,'volume')} className={`w-16 text-center border rounded px-1 py-0.5 text-[11px] font-mono ${inputErrors[`${mat.id}_volume`]?'border-red-400 bg-red-50':'border-gray-300'}`} placeholder="?"/>
+                                                    {inputErrors[`${mat.id}_volume`]&&<div className="text-[8px] text-red-500 mt-0.5">{inputErrors[`${mat.id}_volume`]}</div>}
+                                                </div>:<span className="text-gray-300 text-[10px]">측정 필요</span>}
+                                            </td>
+                                            <td className="py-1 px-1.5 text-center">
+                                                {d?<span className="font-mono font-bold text-blue-600">{d}</span>:<span className="text-gray-300">-</span>}
+                                            </td>
+                                        </tr>
                                     );
                                 })}
-                            </div>
-                        </div>
-
-                        {/* Measurement Results Table */}
-                        {Object.keys(measurements).length > 0 && (
-                            <div className="bg-white p-4 rounded-xl shadow-lg">
-                                <h3 className="font-bold text-gray-800 mb-3 border-b pb-2">측정 결과표</h3>
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-xs border-collapse">
-                                        <thead>
-                                            <tr className="bg-gray-100 text-gray-600">
-                                                <th className="py-1.5 px-2 text-left rounded-tl-lg">물질</th>
-                                                <th className="py-1.5 px-2 text-right">질량(g)</th>
-                                                <th className="py-1.5 px-2 text-right">부피(cm³)</th>
-                                                <th className="py-1.5 px-2 text-right rounded-tr-lg">밀도(g/cm³)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {MATERIALS.map(mat => {
-                                                const m = measurements[mat.id];
-                                                if (!m) return null;
-                                                const d = m.mass && m.volume ? (m.mass / m.volume).toFixed(2) : '-';
-                                                return (
-                                                    <tr key={mat.id} className="border-t border-gray-100">
-                                                        <td className="py-1.5 px-2 flex items-center gap-1">
-                                                            <div className="w-3 h-3 rounded" style={{backgroundColor: mat.color}}></div>
-                                                            {mat.name}
-                                                        </td>
-                                                        <td className="py-1.5 px-2 text-right font-mono">{m.mass ? m.mass.toFixed(2) : '-'}</td>
-                                                        <td className="py-1.5 px-2 text-right font-mono">{m.volume ? m.volume.toFixed(1) : '-'}</td>
-                                                        <td className={`py-1.5 px-2 text-right font-mono font-bold ${d !== '-' ? 'text-blue-600' : ''}`}>{d}</td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                {canShowConclusion && !showConclusion && (
-                                    <button onClick={() => setShowConclusion(true)} className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center justify-center gap-2">
-                                        <CheckCircle size={16} /> 결과 분석하기
-                                    </button>
-                                )}
-
-                                {showConclusion && (
-                                    <div className="mt-3 space-y-3">
-                                        {/* Conclusion 1: Same material = same density */}
-                                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                                            <h4 className="font-bold text-green-800 text-sm mb-2 flex items-center gap-1">
-                                                <CheckCircle size={14} className="text-green-600" /> 결론 1: 밀도는 물질의 특성
-                                            </h4>
-                                            <div className="text-xs text-green-900 space-y-1.5">
-                                                <p>• 철 (소): <strong>{(39.35/5).toFixed(2)} g/cm³</strong> &nbsp;|&nbsp; 철 (대): <strong>{(78.7/10).toFixed(2)} g/cm³</strong></p>
-                                                <p>• 알루미늄 (소): <strong>{(13.5/5).toFixed(2)} g/cm³</strong> &nbsp;|&nbsp; 알루미늄 (대): <strong>{(27.0/10).toFixed(2)} g/cm³</strong></p>
-                                                <p className="bg-green-100 p-2 rounded font-bold text-green-800 mt-2">
-                                                    → 같은 물질은 양(크기)이 달라도 밀도가 같다!<br/>
-                                                    → 따라서 <span className="underline">밀도는 물질의 특성</span>이다.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* Conclusion 2: Mystery materials */}
-                                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                                            <h4 className="font-bold text-amber-800 text-sm mb-2 flex items-center gap-1">
-                                                🔍 결론 2: 미지의 물질 정체
-                                            </h4>
-                                            <div className="text-xs text-amber-900 space-y-1.5">
-                                                <p>• 미지의 물질 A의 밀도: <strong>{(96.6/5).toFixed(2)} g/cm³</strong> → 참고표에서 <span className="bg-yellow-200 px-1 rounded font-bold">금(19.30)</span>과 가장 가까움!</p>
-                                                <p>• 미지의 물질 B의 밀도: <strong>{(89.6/10).toFixed(2)} g/cm³</strong> → 참고표에서 <span className="bg-emerald-200 px-1 rounded font-bold">구리(8.96)</span>과 일치!</p>
-                                                <p className="bg-amber-100 p-2 rounded font-bold text-amber-800 mt-2">
-                                                    → 밀도를 이용하면 미지 물질의 정체를 알아낼 수 있다!
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Reference Table */}
-                        <div className="bg-gray-50 rounded-xl p-3 border border-gray-200 text-xs shadow">
-                            <h4 className="font-bold text-gray-700 mb-2 flex items-center gap-1 border-b border-gray-200 pb-1">
-                                <Info size={12} /> 참고: 금속의 밀도 (20°C)
-                            </h4>
-                            <table className="w-full text-left border-collapse">
-                                <thead><tr className="text-gray-500"><th className="py-1 font-normal">물질</th><th className="py-1 font-normal text-right">밀도(g/cm³)</th></tr></thead>
-                                <tbody className="text-gray-800">
-                                    <tr className="border-t border-gray-200"><td className="py-1">금</td><td className="text-right font-mono">19.30</td></tr>
-                                    <tr className="border-t border-gray-200"><td className="py-1">납</td><td className="text-right font-mono">11.34</td></tr>
-                                    <tr className="border-t border-gray-200"><td className="py-1">은</td><td className="text-right font-mono">10.49</td></tr>
-                                    <tr className="border-t border-gray-200"><td className="py-1">구리</td><td className="text-right font-mono">8.96</td></tr>
-                                    <tr className="border-t border-gray-200"><td className="py-1">철</td><td className="text-right font-mono">7.87</td></tr>
-                                    <tr className="border-t border-gray-200"><td className="py-1">알루미늄</td><td className="text-right font-mono">2.70</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-            );
-        };
 
-        // --- Tab 2: Do it! ---
-        const DensityTower = () => {
-            const [layers, setLayers] = useState([]);
-            const [userSequence, setUserSequence] = useState([null, null, null]);
-            const [isSuccess, setIsSuccess] = useState(false);
-            const [message, setMessage] = useState("");
-            const [isMixing, setIsMixing] = useState(false);
-
-            const availableLiquids = LIQUIDS.filter(l => ['honey', 'water', 'oil'].includes(l.id));
-
-            const addToTower = (l) => {
-                if (layers.length >= 5 || isMixing) return;
-                const newUnsorted = [...layers, l];
-                setLayers(newUnsorted);
-                setIsMixing(true);
-                setTimeout(() => {
-                    const sorted = [...newUnsorted].sort((a,b) => b.density - a.density);
-                    setLayers(sorted);
-                    setIsMixing(false);
-                }, 2000);
-            };
-
-            const addToSequence = (l) => {
-                if(isSuccess) return;
-                const i = userSequence.indexOf(null);
-                if(i !== -1) {
-                    const s = [...userSequence];
-                    s[i] = l;
-                    setUserSequence(s);
-                    check(s);
-                }
-            };
-
-            const removeFromSequence = (index) => {
-                if (isSuccess) return;
-                const newSeq = [...userSequence];
-                newSeq[index] = null;
-                setUserSequence(newSeq);
-                setIsSuccess(false);
-                setMessage("");
-            };
-
-            const check = (s) => {
-                if(s.includes(null)) return;
-                let ok = true;
-                for(let i=0; i<s.length-1; i++) if(s[i].density < s[i+1].density) ok = false;
-                if(ok) {
-                    setIsSuccess(true);
-                    setMessage("정답입니다! 각 액체의 밀도 값을 확인해보세요.");
-                } else {
-                    setMessage("순서가 틀렸습니다. 다시 실험해 보세요!");
-                }
-            };
-
-            const resetAll = () => {
-                setLayers([]);
-                setUserSequence([null, null, null]);
-                setIsSuccess(false);
-                setMessage("");
-                setIsMixing(false);
-            };
-
-            return (
-                <div className="flex flex-col h-full p-4 items-center bg-gray-50 overflow-y-auto">
-                    <div className="w-full max-w-4xl mb-6 text-center">
-                        <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2 mb-2">
-                            <Droplets className="text-purple-600" /> 물질이 뜨거나 가라앉는 것과 밀도의 관계 알아보기
-                        </h2>
-                        <p className="text-gray-600">서로 섞이지 않는 액체를 넣어보고 밀도에 따라 층이 분리되는 것을 관찰해보세요.</p>
-                    </div>
-                    <div className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-8">
-                        <div className="flex flex-col items-center">
-                            <div className={`w-32 h-64 border-4 border-gray-300 rounded-b-2xl bg-white relative overflow-hidden shadow-xl mb-2 ${isMixing ? 'mixing' : ''}`}>
-                                <div className="absolute bottom-0 w-full flex flex-col-reverse transition-all">
-                                    {layers.map((l, idx) => (
-                                        <div key={idx} className="w-full flex items-center justify-center liquid-layer"
-                                            style={{
-                                                height: '40px',
-                                                backgroundColor: l.color,
-                                                color: l.textColor,
-                                                opacity: 0.9,
-                                                transform: isMixing ? `translateY(${Math.sin(idx)*5}px)` : 'none'
-                                            }}>
-                                            <span className="text-xs font-bold drop-shadow-md">{l.name}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                                {isMixing && <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-30 text-gray-800 font-bold animate-pulse">섞이는 중...</div>}
-                            </div>
-                            <span className="text-sm font-bold text-gray-500">실험용 컵</span>
-                        </div>
-                        <div className="flex-1 flex flex-col gap-6 w-full">
-                            <div className="bg-white p-4 rounded-xl shadow-md">
-                                <h3 className="font-bold text-gray-700 mb-2">1단계: 액체 관찰하기 (클릭하여 컵에 넣기)</h3>
-                                <p className="text-xs text-gray-500 mb-3">꿀, 물, 식용유는 서로 섞이지 않는 액체입니다. 밀도 차이에 의해 층이 분리됩니다.</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {availableLiquids.map(l => (
-                                        <button key={l.id} onClick={() => addToTower(l)} disabled={isMixing}
-                                            className="px-3 py-2 rounded-lg border hover:bg-gray-50 text-sm disabled:opacity-50"
-                                            style={{ borderLeft: `4px solid ${l.color}` }}>
-                                            {l.name}
-                                        </button>
-                                    ))}
-                                    <button onClick={resetAll} className="ml-auto text-xs text-red-500 underline">비우기</button>
-                                </div>
-                            </div>
-                            <div className="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-md">
-                                <h3 className="font-bold text-blue-900 mb-4 text-center">2단계: 밀도 순서 맞추기 (밀도가 큰 순서대로)</h3>
-                                <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-                                    {userSequence.map((slot, idx) => (
-                                        <React.Fragment key={idx}>
-                                            <div onClick={() => removeFromSequence(idx)} className={`w-24 h-28 rounded-lg border-2 border-dashed flex flex-col items-center justify-center cursor-pointer bg-white relative ${slot ? 'border-solid border-gray-400' : 'border-gray-300'}`}>
-                                                {slot ? (
-                                                    <>
-                                                        <div className="w-full h-full absolute inset-0 rounded-lg opacity-20" style={{backgroundColor: slot.color}}></div>
-                                                        <span className="font-bold text-gray-800 z-10 text-xs text-center">{slot.name}</span>
-                                                        {isSuccess && (
-                                                            <div className="absolute bottom-1 bg-blue-600 px-2 py-0.5 rounded-full text-[11px] font-bold text-white shadow z-10 density-highlight">
-                                                                {slot.density} g/mL
-                                                            </div>
-                                                        )}
-                                                    </>
-                                                ) : <span className="text-gray-300 text-2xl font-bold">{idx + 1}</span>}
-                                            </div>
-                                            {idx < 2 && <span className="text-gray-400 font-bold text-xl">&gt;</span>}
-                                        </React.Fragment>
-                                    ))}
-                                </div>
-                                <div className="flex flex-wrap justify-center gap-2 mb-4">
-                                    {availableLiquids.map(l => (
-                                        <button key={l.id} onClick={() => addToSequence(l)} disabled={userSequence.some(s => s && s.id === l.id) || isSuccess}
-                                            className="px-3 py-2 rounded border text-sm font-medium bg-white hover:bg-blue-50 disabled:opacity-30">
-                                            {l.name}
-                                        </button>
-                                    ))}
-                                </div>
-                                {message && <div className={`text-center font-bold p-3 rounded-lg ${isSuccess ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>{message}</div>}
-                                <button onClick={resetAll} className="mt-4 w-full py-2 bg-gray-700 text-white rounded text-sm">초기화</button>
+                    {/* Conclusion: same material = same density */}
+                    {allBaseComplete&&!showConclusion&&<button onClick={()=>{setShowConclusion(true);SFX.play('success')}} className="mt-2 w-full bg-green-600 text-white py-1.5 rounded-lg text-xs font-bold hover:bg-green-700">📊 결과 분석하기</button>}
+                    {showConclusion&&(
+                        <div className="mt-2 bg-green-50 border border-green-200 rounded-lg p-2.5 fade-in">
+                            <h4 className="font-bold text-green-800 text-xs mb-1.5">✅ 결론: 밀도는 물질의 특성</h4>
+                            <div className="text-[10px] text-green-900 space-y-1">
+                                <p>• 철 (소): <strong>{getUserDensity('iron_s')||'?'}</strong> g/cm³ | 철 (대): <strong>{getUserDensity('iron_l')||'?'}</strong> g/cm³ → <strong>같다!</strong></p>
+                                <p>• 알루미늄 (소): <strong>{getUserDensity('alu_s')||'?'}</strong> g/cm³ | 알루미늄 (대): <strong>{getUserDensity('alu_l')||'?'}</strong> g/cm³ → <strong>같다!</strong></p>
+                                <p className="bg-green-100 p-1.5 rounded font-bold text-green-800">→ 같은 물질은 양(크기)이 달라도 밀도가 같다!<br/>→ 따라서 <span className="underline">밀도는 물질의 특성</span>이다.</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-            );
-        };
+                    )}
 
-        // --- Tab 3: Examples ---
-        const DiverGame = () => {
-            const [weights, setWeights] = useState(0);
-            const [status, setStatus] = useState('idle');
-            const [depth, setDepth] = useState(8);
-            const [isDiving, setIsDiving] = useState(false);
-            const [showResult, setShowResult] = useState(false);
-
-            const dive = () => {
-                setIsDiving(true);
-                setShowResult(false);
-
-                let newDepth, newStatus;
-                if (weights === 0)      { newDepth = 10;  newStatus = 'surface_float'; }
-                else if (weights === 1)  { newDepth = 25;  newStatus = 'shallow'; }
-                else if (weights === 2)  { newDepth = 45;  newStatus = 'neutral'; }
-                else if (weights === 3)  { newDepth = 65;  newStatus = 'deep'; }
-                else if (weights === 4)  { newDepth = 78;  newStatus = 'very_deep'; }
-                else                     { newDepth = 90;  newStatus = 'floor'; }
-
-                setDepth(newDepth);
-                setStatus(newStatus);
-                setTimeout(() => setShowResult(true), 2200);
-            };
-
-            const getStatusInfo = () => {
-                switch(status) {
-                    case 'surface_float': return { text: "구명조끼만 입은 것처럼 떠 있습니다. 납이 더 필요해요!", color: "text-sky-700", bg: "bg-sky-50 border-sky-200" };
-                    case 'shallow':       return { text: "가라앉기 시작했지만 아직 수심이 얕습니다.", color: "text-blue-700", bg: "bg-blue-50 border-blue-200" };
-                    case 'neutral':       return { text: "🎉 성공! 수심 15m 지점에 안정적으로 멈췄습니다!", color: "text-green-700", bg: "bg-green-50 border-green-200" };
-                    case 'deep':          return { text: "너무 무거워서 15m보다 깊이 가라앉고 있습니다.", color: "text-orange-700", bg: "bg-orange-50 border-orange-200" };
-                    case 'very_deep':     return { text: "밀도가 너무 커서 깊은 곳으로 계속 가라앉습니다!", color: "text-red-600", bg: "bg-red-50 border-red-200" };
-                    case 'floor':         return { text: "바닥에 닿았습니다! 납이 너무 많아요!", color: "text-red-700", bg: "bg-red-50 border-red-200" };
-                    default:              return { text: "납 벨트 수를 조절하고 잠수를 시작해보세요!", color: "text-gray-600", bg: "bg-gray-50 border-gray-200" };
-                }
-            };
-            const statusInfo = getStatusInfo();
-
-            return (
-                <div className="flex flex-col h-full p-4 gap-4 bg-slate-100">
-                    <div className="flex flex-col md:flex-row gap-4 h-full">
-                        {/* Ocean Scene */}
-                        <div className="flex-1 rounded-2xl overflow-hidden relative shadow-2xl ocean-gradient border-4 border-slate-300" style={{minHeight: '450px'}}>
-                            {/* Sky */}
-                            <div className="absolute top-0 left-0 w-full h-[15%]" style={{background: 'linear-gradient(to bottom, #e0f2fe 0%, #bae6fd 100%)'}}></div>
-
-                            {/* Sun */}
-                            <div className="absolute top-2 right-16 w-10 h-10 bg-yellow-300 rounded-full shadow-lg" style={{boxShadow: '0 0 20px 8px rgba(253,224,71,0.4)'}}></div>
-
-                            {/* Clouds */}
-                            <div className="absolute top-2 left-20">
-                                <svg width="60" height="24"><ellipse cx="20" cy="14" rx="16" ry="8" fill="white" opacity="0.8"/><ellipse cx="35" cy="12" rx="20" ry="10" fill="white" opacity="0.8"/><ellipse cx="50" cy="14" rx="14" ry="7" fill="white" opacity="0.8"/></svg>
-                            </div>
-
-                            {/* Ship */}
-                            <div className="absolute left-6 top-[3%] z-10"><SimpleShip /></div>
-
-                            {/* Life jacket person */}
-                            <div className="absolute right-[20%] top-[6%] z-10">
-                                <LifeJacketPerson />
-                                <div className="text-[9px] font-bold text-white bg-orange-500 px-1.5 py-0.5 rounded-full text-center -mt-1 shadow">구명조끼</div>
-                            </div>
-
-                            {/* Waves */}
-                            <OceanWaves />
-
-                            {/* Depth markers */}
-                            <div className="absolute right-0 h-full w-10 bg-black bg-opacity-20 flex flex-col justify-between text-white text-[9px] font-mono text-center z-10" style={{paddingTop: '16%', paddingBottom: '4%'}}>
-                                <span>0m</span><span>5m</span><span>10m</span>
-                                <span className="text-yellow-300 font-bold bg-yellow-900 bg-opacity-40 rounded px-0.5">15m</span>
-                                <span>20m</span><span>25m</span><span>30m</span>
-                            </div>
-
-                            {/* 15m target line */}
-                            <div className="absolute left-0 right-10 border-t-2 border-dashed border-yellow-400 opacity-40 z-5" style={{top: '45%'}}></div>
-
-                            {/* Bubbles */}
-                            <Bubbles count={8} />
-
-                            {/* Fish */}
-                            <Fish className="fish-anim" color="#f59e0b" y="55%" />
-                            <Fish className="fish-anim-2" color="#fb7185" y="75%" />
-
-                            {/* Seaweed */}
-                            <Seaweed x="10%" h={45} />
-                            <Seaweed x="25%" h={35} />
-                            <Seaweed x="70%" h={40} />
-                            <Seaweed x="85%" h={30} />
-
-                            {/* Sandy bottom */}
-                            <div className="absolute bottom-0 left-0 w-full h-5" style={{background: 'linear-gradient(to bottom, #d4a574, #c2956a)'}}>
-                                <div className="absolute bottom-1 left-[15%] w-3 h-2 bg-gray-400 rounded-full opacity-40"></div>
-                                <div className="absolute bottom-1 left-[55%] w-4 h-2 bg-gray-400 rounded-full opacity-30"></div>
-                                <div className="absolute bottom-0.5 left-[80%] w-2 h-2 bg-gray-400 rounded-full opacity-40"></div>
-                            </div>
-
-                            {/* Diver */}
-                            <div className="absolute left-1/2 transform -translate-x-1/2 diver-anim z-20" style={{ top: `${depth}%`, marginTop: '-40px' }}>
-                                <div className="gentle-bob">
-                                    <RealisticDiver weightCount={weights} />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Control Panel */}
-                        <div className="md:w-80 bg-white p-5 rounded-2xl shadow-lg flex flex-col justify-between border border-slate-200">
-                            <div>
-                                <h2 className="text-xl font-bold text-slate-800 mb-1 flex items-center gap-2">
-                                    <Waves className="text-blue-600" /> 잠수부와 밀도
-                                </h2>
-                                <p className="text-slate-500 text-xs mb-4 leading-relaxed">
-                                    <strong className="text-slate-700">미션:</strong> 납 벨트의 수를 조절하여 잠수부를 <span className="text-blue-600 font-bold">수심 15m 지점</span>에 정확히 멈춰보세요!
-                                </p>
-
-                                {/* Weight control */}
-                                <div className="bg-slate-50 p-4 rounded-xl mb-4 border border-slate-200">
-                                    <h3 className="font-bold text-center mb-3 text-slate-700 text-sm">납 벨트 수 조절</h3>
-                                    <div className="flex items-center justify-between px-2">
-                                        <button onClick={() => {setWeights(Math.max(0, weights - 1)); setIsDiving(false); setShowResult(false);}}
-                                            className="w-12 h-12 bg-white border-2 border-red-200 text-red-500 rounded-xl font-bold text-xl shadow-sm hover:bg-red-50 active:scale-95 transition-all">−</button>
-                                        <div className="text-center">
-                                            <span className="text-5xl font-bold text-slate-800">{weights}</span>
-                                            <div className="text-[10px] text-slate-400 font-bold tracking-widest mt-1">개</div>
-                                        </div>
-                                        <button onClick={() => {setWeights(Math.min(5, weights + 1)); setIsDiving(false); setShowResult(false);}}
-                                            className="w-12 h-12 bg-white border-2 border-green-200 text-green-500 rounded-xl font-bold text-xl shadow-sm hover:bg-green-50 active:scale-95 transition-all">+</button>
-                                    </div>
-                                    {/* Weight visualization */}
-                                    <div className="flex justify-center gap-1 mt-3">
-                                        {[...Array(5)].map((_, i) => (
-                                            <div key={i} className={`w-6 h-4 rounded border ${i < weights ? 'bg-slate-700 border-slate-800' : 'bg-gray-100 border-gray-200'} transition-colors`}></div>
-                                        ))}
+                    {/* Mystery Quiz */}
+                    {mysteryComplete&&(
+                        <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-2.5 fade-in">
+                            <h4 className="font-bold text-amber-800 text-xs mb-2">🔍 미지의 물질 감별 퀴즈</h4>
+                            <div className="space-y-2">
+                                <div>
+                                    <p className="text-[10px] text-amber-700 mb-1">미지의 물질 A (밀도: {getUserDensity('mystery_a')} g/cm³)의 정체는?</p>
+                                    <div className="flex flex-wrap gap-1">
+                                        {DENSITY_REF.map(r=><button key={r.name} onClick={()=>{SFX.play('click');setQuizA(r.name);setQuizResult(null)}} className={`px-2 py-0.5 rounded border text-[10px] font-medium ${quizA===r.name?'bg-amber-200 border-amber-400':'bg-white border-gray-200 hover:bg-amber-50'}`}>{r.name}</button>)}
                                     </div>
                                 </div>
-
-                                {/* Status message */}
-                                <div className={`p-3 rounded-xl border text-sm mb-4 transition-all ${statusInfo.bg}`}>
-                                    <p className={`font-medium ${statusInfo.color} text-center`}>{statusInfo.text}</p>
+                                <div>
+                                    <p className="text-[10px] text-amber-700 mb-1">미지의 물질 B (밀도: {getUserDensity('mystery_b')} g/cm³)의 정체는?</p>
+                                    <div className="flex flex-wrap gap-1">
+                                        {DENSITY_REF.map(r=><button key={r.name} onClick={()=>{SFX.play('click');setQuizB(r.name);setQuizResult(null)}} className={`px-2 py-0.5 rounded border text-[10px] font-medium ${quizB===r.name?'bg-emerald-200 border-emerald-400':'bg-white border-gray-200 hover:bg-emerald-50'}`}>{r.name}</button>)}
+                                    </div>
                                 </div>
+                                <button onClick={handleQuizSubmit} disabled={!quizA||!quizB} className="w-full bg-amber-600 text-white py-1.5 rounded text-xs font-bold hover:bg-amber-700 disabled:opacity-40">정답 확인</button>
+                                {quizResult==='correct'&&<div className="bg-green-100 text-green-700 p-2 rounded text-xs font-bold text-center">🎉 정답! 미지의 물질 A는 금, B는 구리입니다! (미션 1 달성!)</div>}
+                                {quizResult==='wrong'&&<div className="bg-red-100 text-red-600 p-2 rounded text-xs font-bold text-center">❌ 틀렸습니다. 참고표의 밀도와 비교해보세요!</div>}
                             </div>
+                        </div>
+                    )}
+                </div>
 
-                            <div>
-                                <button onClick={dive}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 text-lg">
-                                    <CircleDashed size={20} className={isDiving ? "animate-spin" : ""} />
-                                    잠수 시작!
-                                </button>
+                {/* Reference */}
+                <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-200 text-[11px] shadow">
+                    <h4 className="font-bold text-gray-700 mb-1.5 flex items-center gap-1 border-b border-gray-200 pb-1"><InfoIcon size={11}/> 참고: 금속의 밀도 (20°C)</h4>
+                    <table className="w-full text-left border-collapse">
+                        <thead><tr className="text-gray-500"><th className="py-0.5 font-normal">물질</th><th className="py-0.5 font-normal text-right">밀도(g/cm³)</th></tr></thead>
+                        <tbody className="text-gray-800">
+                            {DENSITY_REF.map(r=><tr key={r.name} className="border-t border-gray-200"><td className="py-0.5">{r.name}</td><td className="text-right font-mono">{r.d.toFixed(2)}</td></tr>)}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    );
+};
 
-                                <div className="mt-3 p-3 bg-slate-50 rounded-xl text-xs text-slate-600 border border-slate-200 leading-relaxed">
-                                    <p className="mb-1.5"><strong className="text-slate-800">🏊 잠수부</strong>는 물속에 가라앉기 위해 <strong>납이 달린 허리띠</strong>를 착용합니다. 납을 달면 전체 밀도가 물보다 커져서 가라앉을 수 있습니다.</p>
-                                    <p><strong className="text-slate-800">🦺 구명조끼</strong>를 입으면 전체 부피가 커져 평균 밀도가 물보다 작아지므로 물에 뜹니다.</p>
+/* ===== TAB 2: TOWER ===== */
+const DensityTower=({onAchieve})=>{
+    const[layers,setLayers]=useState([]);
+    const[userSequence,setUserSequence]=useState([null,null,null]);
+    const[isSuccess,setIsSuccess]=useState(false);
+    const[message,setMessage]=useState("");
+    const[isMixing,setIsMixing]=useState(false);
+
+    const availableLiquids=LIQUIDS;
+
+    const addToTower=(l)=>{
+        if(layers.length>=5||isMixing)return;
+        SFX.play('splash');
+        const n=[...layers,l];setLayers(n);setIsMixing(true);
+        setTimeout(()=>{setLayers([...n].sort((a,b)=>b.density-a.density));setIsMixing(false)},2000);
+    };
+
+    const addToSequence=(l)=>{
+        if(isSuccess)return;SFX.play('click');
+        const i=userSequence.indexOf(null);
+        if(i!==-1){const s=[...userSequence];s[i]=l;setUserSequence(s);check(s)}
+    };
+
+    const removeFromSequence=i=>{
+        if(isSuccess)return;SFX.play('click');
+        const n=[...userSequence];n[i]=null;setUserSequence(n);setIsSuccess(false);setMessage("");
+    };
+
+    const check=s=>{
+        if(s.includes(null))return;
+        let ok=true;for(let i=0;i<s.length-1;i++)if(s[i].density<s[i+1].density)ok=false;
+        if(ok){setIsSuccess(true);setMessage("정답입니다! 각 액체의 밀도 값을 확인해보세요.");SFX.play('achievement');onAchieve('tower')}
+        else{setMessage("순서가 틀렸습니다. 다시 실험해 보세요!");SFX.play('error')}
+    };
+
+    const resetAll=()=>{SFX.play('reset');setLayers([]);setUserSequence([null,null,null]);setIsSuccess(false);setMessage("");setIsMixing(false)};
+
+    return(
+        <div className="flex flex-col h-full p-4 items-center bg-gray-50 overflow-y-auto">
+            <div className="w-full max-w-4xl mb-4 text-center">
+                <h2 className="text-xl font-bold text-gray-800 flex items-center justify-center gap-2 mb-1"><Droplets className="text-purple-600"/> 물질이 뜨거나 가라앉는 것과 밀도의 관계</h2>
+                <p className="text-gray-600 text-sm">서로 섞이지 않는 액체를 넣어보고 밀도에 따라 층이 분리되는 것을 관찰해보세요.</p>
+            </div>
+            <div className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-8">
+                <div className="flex flex-col items-center">
+                    <div className={`w-32 h-64 border-4 border-gray-300 rounded-b-2xl bg-white relative overflow-hidden shadow-xl mb-2 ${isMixing?'mixing':''}`}>
+                        <div className="absolute bottom-0 w-full flex flex-col-reverse transition-all">
+                            {layers.map((l,idx)=>(
+                                <div key={idx} className="w-full flex items-center justify-center liquid-layer" style={{height:'40px',backgroundColor:l.color,color:l.textColor,opacity:.9}}>
+                                    <span className="text-xs font-bold drop-shadow-md">{l.name}</span>
                                 </div>
+                            ))}
+                        </div>
+                        {isMixing&&<div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-30 text-gray-800 font-bold animate-pulse text-sm">섞이는 중...</div>}
+                    </div>
+                    <span className="text-sm font-bold text-gray-500">실험용 컵</span>
+                </div>
+                <div className="flex-1 flex flex-col gap-5 w-full">
+                    <div className="bg-white p-4 rounded-xl shadow-md">
+                        <h3 className="font-bold text-gray-700 mb-2 text-sm">1단계: 액체 관찰하기 (클릭하여 컵에 넣기)</h3>
+                        <p className="text-xs text-gray-500 mb-3">꿀, 물, 식용유는 서로 섞이지 않는 액체입니다.</p>
+                        <div className="flex flex-wrap gap-2">
+                            {availableLiquids.map(l=><button key={l.id} onClick={()=>addToTower(l)} disabled={isMixing} className="px-3 py-2 rounded-lg border hover:bg-gray-50 text-sm disabled:opacity-50" style={{borderLeft:`4px solid ${l.color}`}}>{l.name}</button>)}
+                            <button onClick={resetAll} className="ml-auto text-xs text-red-500 underline">비우기</button>
+                        </div>
+                    </div>
+                    <div className="bg-blue-50 p-5 rounded-xl border border-blue-200 shadow-md">
+                        <h3 className="font-bold text-blue-900 mb-4 text-center text-sm">2단계: 밀도 순서 맞추기 (밀도가 큰 순서대로)</h3>
+                        <div className="flex flex-wrap items-center justify-center gap-2 mb-5">
+                            {userSequence.map((slot,idx)=>(
+                                <React.Fragment key={idx}>
+                                    <div onClick={()=>removeFromSequence(idx)} className={`w-24 h-28 rounded-lg border-2 border-dashed flex flex-col items-center justify-center cursor-pointer bg-white relative ${slot?'border-solid border-gray-400':'border-gray-300'}`}>
+                                        {slot?(<>
+                                            <div className="w-full h-full absolute inset-0 rounded-lg opacity-20" style={{backgroundColor:slot.color}}></div>
+                                            <span className="font-bold text-gray-800 z-10 text-xs text-center">{slot.name}</span>
+                                            {isSuccess&&<div className="absolute bottom-1.5 bg-blue-600 px-2 py-0.5 rounded-full text-[11px] font-bold text-white shadow z-10 density-highlight">{slot.density} g/mL</div>}
+                                        </>):<span className="text-gray-300 text-2xl font-bold">{idx+1}</span>}
+                                    </div>
+                                    {idx<2&&<span className="text-gray-400 font-bold text-xl">&gt;</span>}
+                                </React.Fragment>
+                            ))}
+                        </div>
+                        <div className="flex flex-wrap justify-center gap-2 mb-4">
+                            {availableLiquids.map(l=><button key={l.id} onClick={()=>addToSequence(l)} disabled={userSequence.some(s=>s&&s.id===l.id)||isSuccess} className="px-3 py-2 rounded border text-sm font-medium bg-white hover:bg-blue-50 disabled:opacity-30">{l.name}</button>)}
+                        </div>
+                        {message&&<div className={`text-center font-bold p-3 rounded-lg ${isSuccess?'bg-green-100 text-green-700':'bg-red-100 text-red-600'}`}>{message}{isSuccess&&' (미션 2 달성!)'}</div>}
+                        <button onClick={resetAll} className="mt-3 w-full py-2 bg-gray-700 text-white rounded text-sm">초기화</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ===== TAB 3: DIVER ===== */
+const DiverGame=({onAchieve})=>{
+    const[weights,setWeights]=useState(0);
+    const[status,setStatus]=useState('idle');
+    const[depth,setDepth]=useState(8);
+    const[isDiving,setIsDiving]=useState(false);
+    const[showResult,setShowResult]=useState(false);
+
+    const dive=()=>{
+        SFX.play('dive');
+        setIsDiving(true);setShowResult(false);
+        let nd,ns;
+        if(weights===0){nd=10;ns='surface_float'}
+        else if(weights===1){nd=25;ns='shallow'}
+        else if(weights===2){nd=45;ns='neutral'}
+        else if(weights===3){nd=62;ns='deep'}
+        else if(weights===4){nd=75;ns='very_deep'}
+        else{nd=90;ns='floor'}
+        setDepth(nd);setStatus(ns);
+        setTimeout(()=>{
+            setShowResult(true);
+            if(ns==='neutral'){SFX.play('achievement');onAchieve('diver')}
+        },2200);
+    };
+
+    const getStatusInfo=()=>{
+        switch(status){
+            case'surface_float':return{text:"밀도가 작아 물 위에 떠 있습니다. 납이 더 필요해요!",color:"text-sky-700",bg:"bg-sky-50 border-sky-200",emoji:"🏊"};
+            case'shallow':return{text:"가라앉기 시작했지만 아직 수심이 얕습니다.",color:"text-blue-700",bg:"bg-blue-50 border-blue-200",emoji:"⬇️"};
+            case'neutral':return{text:"🎉 성공! 수심 15m 지점에 안정적으로 멈췄습니다!",color:"text-green-700",bg:"bg-green-50 border-green-200",emoji:"✅"};
+            case'deep':return{text:"너무 무거워서 15m보다 깊이 가라앉고 있습니다.",color:"text-orange-700",bg:"bg-orange-50 border-orange-200",emoji:"⚠️"};
+            case'very_deep':return{text:"밀도가 너무 커서 깊은 곳으로 계속 가라앉습니다!",color:"text-red-600",bg:"bg-red-50 border-red-200",emoji:"🚨"};
+            case'floor':return{text:"바닥에 닿았습니다! 납이 너무 많아요!",color:"text-red-700",bg:"bg-red-50 border-red-200",emoji:"💥"};
+            default:return{text:"납 벨트 수를 조절하고 잠수를 시작해보세요!",color:"text-gray-600",bg:"bg-gray-50 border-gray-200",emoji:"🤿"};
+        }
+    };
+    const si=getStatusInfo();
+
+    return(
+        <div className="flex flex-col h-full p-3 gap-3 bg-slate-100">
+            <div className="flex flex-col md:flex-row gap-3 h-full">
+                {/* Ocean */}
+                <div className="flex-1 rounded-2xl overflow-hidden relative shadow-2xl ocean-gradient border-4 border-slate-300" style={{minHeight:'420px'}}>
+                    <div className="absolute top-0 left-0 w-full h-[15%]" style={{background:'linear-gradient(to bottom,#e0f2fe,#bae6fd)'}}></div>
+                    <div className="absolute top-2 right-16 w-10 h-10 bg-yellow-300 rounded-full" style={{boxShadow:'0 0 20px 8px rgba(253,224,71,.4)'}}></div>
+                    <div className="absolute top-2 left-20"><svg width="60" height="24"><ellipse cx="20" cy="14" rx="16" ry="8" fill="white" opacity=".8"/><ellipse cx="35" cy="12" rx="20" ry="10" fill="white" opacity=".8"/><ellipse cx="50" cy="14" rx="14" ry="7" fill="white" opacity=".8"/></svg></div>
+                    <div className="absolute left-6 top-[3%] z-10"><SimpleShip/></div>
+                    <div className="absolute right-[20%] top-[6%] z-10"><LifeJacketPerson/><div className="text-[9px] font-bold text-white bg-orange-500 px-1.5 py-0.5 rounded-full text-center -mt-1 shadow">구명조끼</div></div>
+                    <OceanWaves/>
+                    <div className="absolute right-0 h-full w-10 bg-black bg-opacity-20 flex flex-col justify-between text-white text-[9px] font-mono text-center z-10" style={{paddingTop:'16%',paddingBottom:'4%'}}><span>0m</span><span>5m</span><span>10m</span><span className="text-yellow-300 font-bold bg-yellow-900 bg-opacity-40 rounded px-0.5">15m</span><span>20m</span><span>25m</span><span>30m</span></div>
+                    <div className="absolute left-0 right-10 border-t-2 border-dashed border-yellow-400 opacity-40 z-5" style={{top:'45%'}}></div>
+                    <Bubbles count={8}/>
+                    <Fish className="fish-anim" color="#f59e0b" y="55%"/>
+                    <Fish className="fish-anim-2" color="#fb7185" y="75%"/>
+                    <Seaweed x="10%" h={45}/><Seaweed x="25%" h={35}/><Seaweed x="70%" h={40}/><Seaweed x="85%" h={30}/>
+                    <div className="absolute bottom-0 left-0 w-full h-5" style={{background:'linear-gradient(to bottom,#d4a574,#c2956a)'}}></div>
+                    <div className="absolute left-1/2 transform -translate-x-1/2 diver-anim z-20" style={{top:`${depth}%`,marginTop:'-40px'}}><div className="gentle-bob"><RealisticDiver weightCount={weights}/></div></div>
+                </div>
+
+                {/* Controls */}
+                <div className="md:w-72 bg-white p-4 rounded-2xl shadow-lg flex flex-col justify-between border border-slate-200">
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2"><Waves className="text-blue-600" size={20}/> 잠수부와 밀도</h2>
+                        <p className="text-slate-500 text-[11px] mb-3"><strong className="text-slate-700">미션:</strong> 납 벨트 수를 조절하여 <span className="text-blue-600 font-bold">수심 15m</span>에 멈추세요!</p>
+                        <div className="bg-slate-50 p-3 rounded-xl mb-3 border border-slate-200">
+                            <h3 className="font-bold text-center mb-2 text-slate-700 text-xs">납 벨트 수 조절</h3>
+                            <div className="flex items-center justify-between px-1">
+                                <button onClick={()=>{SFX.play('click');setWeights(Math.max(0,weights-1));setIsDiving(false);setShowResult(false)}} className="w-10 h-10 bg-white border-2 border-red-200 text-red-500 rounded-xl font-bold text-lg shadow-sm hover:bg-red-50 active:scale-95">−</button>
+                                <div className="text-center"><span className="text-4xl font-bold text-slate-800">{weights}</span><div className="text-[9px] text-slate-400 font-bold tracking-widest mt-0.5">개</div></div>
+                                <button onClick={()=>{SFX.play('click');setWeights(Math.min(5,weights+1));setIsDiving(false);setShowResult(false)}} className="w-10 h-10 bg-white border-2 border-green-200 text-green-500 rounded-xl font-bold text-lg shadow-sm hover:bg-green-50 active:scale-95">+</button>
                             </div>
+                            <div className="flex justify-center gap-1 mt-2">{[...Array(5)].map((_,i)=><div key={i} className={`w-5 h-3 rounded border ${i<weights?'bg-slate-700 border-slate-800':'bg-gray-100 border-gray-200'} transition-colors`}></div>)}</div>
+                        </div>
+                        <div className={`p-2.5 rounded-xl border text-xs mb-3 transition-all ${si.bg}`}>
+                            <p className={`font-medium ${si.color} text-center`}>{si.emoji} {si.text}</p>
+                            {status==='neutral'&&showResult&&<p className="text-center text-green-600 font-bold text-xs mt-1">미션 3 달성!</p>}
+                        </div>
+                    </div>
+                    <div>
+                        <button onClick={dive} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"><CircleDashed size={18} className={isDiving?"animate-spin":""}/> 잠수 시작!</button>
+                        <div className="mt-2 p-2.5 bg-slate-50 rounded-xl text-[10px] text-slate-600 border border-slate-200 leading-relaxed">
+                            <p className="mb-1"><strong className="text-slate-800">🏊 잠수부</strong>는 납 허리띠로 전체 밀도를 높여 가라앉습니다.</p>
+                            <p><strong className="text-slate-800">🦺 구명조끼</strong>는 부피를 늘려 평균 밀도를 낮추어 뜨게 합니다.</p>
                         </div>
                     </div>
                 </div>
-            );
-        };
+            </div>
+        </div>
+    );
+};
 
-        const App = () => {
-            const [activeTab, setActiveTab] = useState('experiment');
-            return (
-                <div className="min-h-screen flex flex-col max-w-6xl mx-auto shadow-2xl my-0 lg:my-8 bg-white lg:rounded-3xl overflow-hidden">
-                    <header className="bg-slate-800 text-white p-4 flex flex-col md:flex-row justify-between items-center z-20 gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-blue-500 p-2 rounded-lg"><Beaker className="text-white" size={24} /></div>
-                            <h1 className="text-xl font-bold tracking-tight">가상 과학 실험실 : I. 물질의 특성 - 1. 밀도</h1>
-                        </div>
-                        <div className="flex flex-wrap justify-center bg-slate-700 rounded-lg p-1 gap-1">
-                            <button onClick={() => setActiveTab('experiment')} className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${activeTab === 'experiment' ? 'bg-blue-500 text-white shadow' : 'text-gray-300 hover:text-white'}`}>1. 탐구</button>
-                            <button onClick={() => setActiveTab('tower')} className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${activeTab === 'tower' ? 'bg-purple-500 text-white shadow' : 'text-gray-300 hover:text-white'}`}>2. 해 보기</button>
-                            <button onClick={() => setActiveTab('diver')} className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${activeTab === 'diver' ? 'bg-teal-500 text-white shadow' : 'text-gray-300 hover:text-white'}`}>3. 생활 속 밀도</button>
-                        </div>
-                    </header>
-                    <main className="flex-1 bg-gray-50 overflow-y-auto" style={{minHeight: '600px'}}>
-                        {activeTab === 'experiment' && <ExperimentLab />}
-                        {activeTab === 'tower' && <DensityTower />}
-                        {activeTab === 'diver' && <DiverGame />}
-                    </main>
-                    <footer className="bg-slate-800 text-white p-3 text-center text-xs">
-                        <div className="font-medium">© 2026 과학이조선생(조승재) & 송쌤과학. All rights reserved.</div>
-                        <div className="text-slate-400 mt-1">Last updated : 2026-03-09</div>
-                    </footer>
+/* ===== APP ===== */
+const App=()=>{
+    const[activeTab,setActiveTab]=useState('experiment');
+    const[achievements,setAchievements]=useState({explore:false,tower:false,diver:false});
+    const[showCert,setShowCert]=useState(false);
+    const[showInfo,setShowInfo]=useState(false);
+    const[justAchieved,setJustAchieved]=useState(null);
+    const[showConfetti,setShowConfetti]=useState(false);
+
+    const handleAchieve=useCallback((key)=>{
+        setAchievements(prev=>{
+            if(prev[key])return prev;
+            const next={...prev,[key]:true};
+            setJustAchieved(key);
+            setTimeout(()=>setJustAchieved(null),3000);
+            const total=Object.values(next).filter(Boolean).length;
+            if(total===3){
+                setTimeout(()=>{setShowCert(true);setShowConfetti(true);setTimeout(()=>setShowConfetti(false),4000)},500);
+            }
+            return next;
+        });
+    },[]);
+
+    const achieveLabels={explore:'🔬 탐구 미션 달성!',tower:'🧪 밀도탑 미션 달성!',diver:'🤿 잠수 미션 달성!'};
+
+    return(
+        <div className="min-h-screen flex flex-col max-w-6xl mx-auto shadow-2xl my-0 lg:my-8 bg-white lg:rounded-3xl overflow-hidden relative">
+            {showConfetti&&<Confetti/>}
+            {showCert&&<CertificateModal onClose={()=>setShowCert(false)}/>}
+            {showInfo&&<InfoModal onClose={()=>setShowInfo(false)}/>}
+
+            {/* Achievement toast */}
+            {justAchieved&&(
+                <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 achievement-pop">
+                    <div className="bg-yellow-400 text-yellow-900 px-6 py-3 rounded-2xl shadow-2xl font-bold flex items-center gap-2 text-sm">
+                        <Trophy size={20}/>{achieveLabels[justAchieved]}
+                    </div>
                 </div>
-            );
-        };
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
+            )}
+
+            <header className="bg-slate-800 text-white p-3 flex flex-col md:flex-row justify-between items-center z-20 gap-3">
+                <div className="flex items-center gap-2">
+                    <div className="bg-blue-500 p-1.5 rounded-lg"><Beaker className="text-white" size={20}/></div>
+                    <h1 className="text-base font-bold tracking-tight">가상 과학 실험실 : I. 물질의 특성 - 1. 밀도</h1>
+                    <button onClick={()=>{SFX.play('click');setShowInfo(true)}} className="ml-1 bg-slate-600 hover:bg-slate-500 p-1 rounded-full transition-colors" title="앱 정보">
+                        <InfoIcon size={16} className="text-slate-300"/>
+                    </button>
+                </div>
+                <div className="flex items-center gap-3">
+                    <AchievementBar achievements={achievements} onShowCert={()=>{SFX.play('click');setShowCert(true);setShowConfetti(true);setTimeout(()=>setShowConfetti(false),4000)}}/>
+                    <div className="flex bg-slate-700 rounded-lg p-0.5 gap-0.5">
+                        {[{key:'experiment',label:'1. 탐구',color:'blue'},{key:'tower',label:'2. 해 보기',color:'purple'},{key:'diver',label:'3. 생활 속 밀도',color:'teal'}].map(t=>(
+                            <button key={t.key} onClick={()=>{SFX.play('click');setActiveTab(t.key)}} className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${activeTab===t.key?`bg-${t.color}-500 text-white shadow`:'text-gray-300 hover:text-white'}`}>{t.label}</button>
+                        ))}
+                    </div>
+                </div>
+            </header>
+            <main className="flex-1 bg-gray-50 overflow-y-auto" style={{minHeight:'550px'}}>
+                {activeTab==='experiment'&&<ExperimentLab onAchieve={handleAchieve}/>}
+                {activeTab==='tower'&&<DensityTower onAchieve={handleAchieve}/>}
+                {activeTab==='diver'&&<DiverGame onAchieve={handleAchieve}/>}
+            </main>
+            <footer className="bg-slate-800 text-white p-2.5 text-center text-xs">
+                <div className="font-medium">© 2026 과학이조선생(조승재) & 송쌤과학. All rights reserved.</div>
+                <div className="text-slate-400 mt-0.5">Last updated : 2026-03-09</div>
+            </footer>
+        </div>
+    );
+};
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
 </body>
 </html>
